@@ -8,8 +8,9 @@
 
     <ImageView
         android:id="@+id/news_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="fitCenter"
         tools:src="@drawable/placeholder_news"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -20,9 +21,8 @@
         android:layout_height="wrap_content"
         tools:text="17:06 Today"
         android:layout_margin="8dp"
-        app:layout_constraintStart_toEndOf="@id/news_image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/news_title"/>
+        app:layout_constraintTop_toBottomOf="@id/news_image"/>
 
     <TextView
         android:id="@+id/news_title"
@@ -31,7 +31,7 @@
         android:textSize="20sp"
         tools:text="Some Interesting News"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/news_image" />
+        app:layout_constraintTop_toBottomOf="@id/news_date" />
 
     <TextView
         android:id="@+id/news_full_text"

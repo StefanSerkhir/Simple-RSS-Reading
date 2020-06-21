@@ -42,6 +42,7 @@ public class NewsFetcher {
 
     private void parseNews(InputStream in, List<NewsItem> newsList) throws XmlPullParserException, IOException {
         XmlPullParser parser = Xml.newPullParser();
+        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
         parser.setInput(in, null);
         NewsItem newsToBeAdded = null;
         while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
@@ -62,7 +63,7 @@ public class NewsFetcher {
                             newsToBeAdded.setCategory(parser.nextText());
                         }
                         if (parser.getName().equals("enclosure")) {
-                            newsToBeAdded.setImage(parser.nextText());
+                            newsToBeAdded.setImage(parser.getAttributeValue(0));
                         }
                         if (parser.getName().equals("yandex:full-text")) {
                             newsToBeAdded.setFullText(parser.nextText());
