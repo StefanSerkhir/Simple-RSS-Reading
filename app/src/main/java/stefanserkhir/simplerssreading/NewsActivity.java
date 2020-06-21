@@ -46,14 +46,11 @@ public class NewsActivity extends AppCompatActivity {
         mNewsFullText = findViewById(R.id.news_full_text);
         mNewsFullText.setText(intent.getStringExtra(KEY_FULL_TEXT));
 
-        int width = mNewsTitle.getWidth();
-
         mNewsImage = findViewById(R.id.news_image);
         Glide.with(this)
                 .load(intent.getStringExtra(KEY_IMAGE))
                 .thumbnail(Glide.with(this).load(R.drawable.loading_news))
                 .crossFade()
                 .into(mNewsImage);
-        mNewsImage.setMinimumHeight((int)(width * 1.7f));
     }
 }
