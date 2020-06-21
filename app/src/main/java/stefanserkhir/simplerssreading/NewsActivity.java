@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 public class NewsActivity extends AppCompatActivity {
     private static final String KEY_TITLE = "newsTitle";
@@ -49,9 +49,10 @@ public class NewsActivity extends AppCompatActivity {
         int width = mNewsTitle.getWidth();
 
         mNewsImage = findViewById(R.id.news_image);
-        Picasso.get()
+        Glide.with(this)
                 .load(intent.getStringExtra(KEY_IMAGE))
-                .placeholder(R.drawable.placeholder_news)
+                .thumbnail(Glide.with(this).load(R.drawable.loading_news))
+                .crossFade()
                 .into(mNewsImage);
         mNewsImage.setMinimumHeight((int)(width * 1.7f));
     }

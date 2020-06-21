@@ -10,8 +10,7 @@
         android:id="@+id/news_image"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scaleType="fitCenter"
-        tools:src="@drawable/placeholder_news"
+        android:scaleType="center"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
