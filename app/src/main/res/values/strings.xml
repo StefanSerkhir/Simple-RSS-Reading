@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Simple RSS Reading</string>
+    <string name="filter_news">Filter news</string>
 </resources>

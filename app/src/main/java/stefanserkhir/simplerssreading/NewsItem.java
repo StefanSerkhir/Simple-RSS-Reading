@@ -3,6 +3,7 @@ package stefanserkhir.simplerssreading;
 public class NewsItem {
     private String mTitle;
     private String mFullText;
+    private String mCategory;
     private String mDate;
     private String mImage;
 
@@ -20,6 +21,14 @@ public class NewsItem {
 
     public void setFullText(String fullText) {
         mFullText = fullText;
+    }
+
+    public String getCategory() {
+        return mCategory;
+    }
+
+    public void setCategory(String category) {
+        mCategory = category;
     }
 
     public String getDate() {
