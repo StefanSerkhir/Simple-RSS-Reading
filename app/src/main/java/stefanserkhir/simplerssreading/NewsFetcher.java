@@ -14,11 +14,11 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class NewsFetcher {
-    private static final String TAG = "NewsFetcher";
+import io.realm.Realm;
 
-    public List<NewsItem> fetchNews(String stringURL) {
-        List<NewsItem> newsItemList = new ArrayList<>();
+public class NewsFetcher {
+
+    public void fetchNews(String stringURL) {
         HttpsURLConnection connection = null;
         try {
             URL url = new URL(stringURL);
@@ -29,7 +29,7 @@ public class NewsFetcher {
                 throw new IOException(connection.getResponseMessage() + ": with " + stringURL);
             }
 
-            parseNews(in, newsItemList);
+            parseNews(in);
         } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
         } finally {
@@ -37,14 +37,14 @@ public class NewsFetcher {
                 connection.disconnect();
             }
         }
-        return newsItemList;
     }
 
-    private void parseNews(InputStream in, List<NewsItem> newsList) throws XmlPullParserException, IOException {
+    private void parseNews(InputStream in) throws XmlPullParserException, IOException {
         XmlPullParser parser = Xml.newPullParser();
         parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
         parser.setInput(in, null);
         NewsItem newsToBeAdded = null;
+        List<NewsItem> newsListToBeAdded = new ArrayList<>();
         while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
             switch (parser.getEventType()) {
                 case XmlPullParser.START_TAG:
@@ -73,7 +73,7 @@ public class NewsFetcher {
                     break;
                 case XmlPullParser.END_TAG:
                     if (parser.getName().equals("item") && newsToBeAdded != null) {
-                        newsList.add(newsToBeAdded);
+                        newsListToBeAdded.add(newsToBeAdded);
                     }
                     break;
                 default:
@@ -81,5 +81,11 @@ public class NewsFetcher {
             }
             parser.next();
         }
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.deleteAll();
+        realm.copyToRealm(newsListToBeAdded);
+        realm.commitTransaction();
+        realm.close();
     }
 }

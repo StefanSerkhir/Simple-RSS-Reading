@@ -16,31 +16,33 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 
 public class NewsListActivity extends AppCompatActivity {
-    private static final String TAG = "NewsListActivity";
 
     private RecyclerView mNewsRecyclerView;
     private SwipeRefreshLayout mRefreshLayout;
-    private List<NewsItem> mNewsList = new ArrayList<>();
     private String SELECTED_FILTER = "";
+    private Realm mRealm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_list);
 
+        Realm.init(this);
+        mRealm = Realm.getDefaultInstance();
+
         mNewsRecyclerView = findViewById(R.id.news_recycler_view);
         mNewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class).findAll()));
 
         mRefreshLayout = findViewById(R.id.news_container);
         mRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-        mRefreshLayout.setOnRefreshListener(() -> {
-            new FetchNewsTask().execute();
-        });
+        mRefreshLayout.setRefreshing(true);
+        mRefreshLayout.setOnRefreshListener(() -> new FetchNewsTask().execute());
 
         new FetchNewsTask().execute();
     }
@@ -56,48 +58,29 @@ public class NewsListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        final String CATEGORY_POLITICS = "Политика";
-        final String CATEGORY_SOCIETY = "Общество";
-        final String CATEGORY_SPORT = "Спорт";
-        final String CATEGORY_IN_THE_WORLD = "В мире";
-        final String CATEGORY_INCIDENTS = "Происшествия";
 
         final String CURRENT_CATEGORY = SELECTED_FILTER;
         switch (item.getItemId()) {
             case R.id.category_politics:
-                SELECTED_FILTER = CATEGORY_POLITICS;
-                getSupportActionBar().setSubtitle(getString(R.string.politics));
-                Toast.makeText(this, getString(R.string.you_selected_categoty,
-                                        getString(R.string.politics)), Toast.LENGTH_SHORT).show();
+                SELECTED_FILTER = getString(R.string.politics);
                 break;
             case R.id.category_society:
-                SELECTED_FILTER = CATEGORY_SOCIETY;
-                getSupportActionBar().setSubtitle(getString(R.string.society));
-                Toast.makeText(this, getString(R.string.you_selected_categoty,
-                                        getString(R.string.society)), Toast.LENGTH_SHORT).show();
+                SELECTED_FILTER = getString(R.string.society);
                 break;
             case R.id.category_sport:
-                SELECTED_FILTER = CATEGORY_SPORT;
-                getSupportActionBar().setSubtitle(getString(R.string.sport));
-                Toast.makeText(this, getString(R.string.you_selected_categoty,
-                                        getString(R.string.sport)), Toast.LENGTH_SHORT).show();
+                SELECTED_FILTER = getString(R.string.sport);
                 break;
             case R.id.category_in_the_world:
-                SELECTED_FILTER = CATEGORY_IN_THE_WORLD;
-                getSupportActionBar().setSubtitle(getString(R.string.in_the_world));
-                Toast.makeText(this, getString(R.string.you_selected_categoty,
-                                        getString(R.string.in_the_world)), Toast.LENGTH_SHORT).show();
+                SELECTED_FILTER = getString(R.string.in_the_world);
                 break;
             case R.id.category_incidents:
-                SELECTED_FILTER = CATEGORY_INCIDENTS;
-                getSupportActionBar().setSubtitle(getString(R.string.incidents));
-                Toast.makeText(this, getString(R.string.you_selected_categoty,
-                                        getString(R.string.incidents)), Toast.LENGTH_SHORT).show();
+                SELECTED_FILTER = getString(R.string.incidents);
                 break;
             case R.id.reset_filter:
-                mNewsRecyclerView.setAdapter(new NewsAdapter(mNewsList));
+                mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
+                                .findAll()));
                 SELECTED_FILTER = "";
-                getSupportActionBar().setSubtitle("");
+                getSupportActionBar().setSubtitle(SELECTED_FILTER);
                 Toast.makeText(this, getString(R.string.you_reseted_filter),
                                                             Toast.LENGTH_SHORT).show();
                 return true;
@@ -105,21 +88,14 @@ public class NewsListActivity extends AppCompatActivity {
                 return true;
         }
         if (!SELECTED_FILTER.equals(CURRENT_CATEGORY)) {
-            mNewsRecyclerView.setAdapter(new NewsAdapter(setFilterNews(SELECTED_FILTER)));
+            getSupportActionBar().setSubtitle(SELECTED_FILTER);
+            Toast.makeText(this, getString(R.string.you_selected_categoty,
+                    SELECTED_FILTER), Toast.LENGTH_SHORT).show();
+            mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
+                                .contains("category", SELECTED_FILTER).findAll()));
         }
         return true;
     }
-
-    private List<NewsItem> setFilterNews(String filter) {
-        List<NewsItem> filteredNewsList = new ArrayList<>();
-        for (NewsItem newsItem : mNewsList) {
-            if (newsItem.getCategory().equals(filter)) {
-                filteredNewsList.add(newsItem);
-            }
-        }
-        return filteredNewsList;
-    }
-
     private class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mNewsTitle;
         private TextView mNewsDate;
@@ -147,9 +123,9 @@ public class NewsListActivity extends AppCompatActivity {
     }
 
     private class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
-        private List<NewsItem> mNewsList;
+        private RealmResults<NewsItem> mNewsList;
 
-        public NewsAdapter(List<NewsItem> newsList) {
+        public NewsAdapter(RealmResults<NewsItem> newsList) {
             mNewsList = newsList;
         }
 
@@ -170,22 +146,31 @@ public class NewsListActivity extends AppCompatActivity {
         }
     }
 
-    private class FetchNewsTask extends AsyncTask<Void, Void, List<NewsItem>> {
+    private class FetchNewsTask extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected List<NewsItem> doInBackground(Void... voids) {
-            return new NewsFetcher().fetchNews("https://www.vesti.ru/vesti.rss");
+        protected Void doInBackground(Void... voids) {
+            new NewsFetcher().fetchNews("https://www.vesti.ru/vesti.rss");
+            return null;
         }
 
         @Override
-        protected void onPostExecute(List<NewsItem> newsItems) {
-            mNewsList = newsItems;
+        protected void onPostExecute(Void voidParam) {
             if (SELECTED_FILTER.equals("")) {
-                mNewsRecyclerView.setAdapter(new NewsAdapter(mNewsList));
+                mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
+                                    .findAll()));
             } else {
-                mNewsRecyclerView.setAdapter(new NewsAdapter(setFilterNews(SELECTED_FILTER)));
+                mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
+                                    .contains("category", SELECTED_FILTER).findAll()));
             }
             mRefreshLayout.setRefreshing(false);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        mRealm.close();
     }
 }

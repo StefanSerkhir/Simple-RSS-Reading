@@ -1,49 +1,56 @@
 package stefanserkhir.simplerssreading;
 
-public class NewsItem {
-    private String mTitle;
-    private String mFullText;
-    private String mCategory;
-    private String mDate;
-    private String mImage;
+import io.realm.RealmObject;
+import io.realm.annotations.Required;
+
+public class NewsItem extends RealmObject  {
+    @Required
+    private String title;
+    @Required
+    private String fullText;
+    @Required
+    private String category;
+    @Required
+    private String date;
+    private String image;
 
     public String getTitle() {
-        return mTitle;
+        return title;
     }
 
     public void setTitle(String title) {
-        mTitle = title;
+        this.title = title;
     }
 
     public String getFullText() {
-        return mFullText;
+        return fullText;
     }
 
     public void setFullText(String fullText) {
-        mFullText = fullText;
+        this.fullText = fullText;
     }
 
     public String getCategory() {
-        return mCategory;
+        return category;
     }
 
     public void setCategory(String category) {
-        mCategory = category;
+        this.category = category;
     }
 
     public String getDate() {
-        return mDate;
+        return date;
     }
 
     public void setDate(String date) {
-        mDate = date;
+        this.date = date;
     }
 
     public String getImage() {
-        return mImage;
+        return image;
     }
 
     public void setImage(String image) {
-        mImage = image;
+        this.image = image;
     }
 }
