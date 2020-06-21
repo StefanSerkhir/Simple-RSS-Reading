@@ -3,21 +3,44 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/filter_news"
         android:icon="@drawable/ic_filter"
         android:title="@string/filter_news"
         app:showAsAction="ifRoom|withText" >
 
+
         <menu>
-            <item
-                android:title="dwqdqw"
-                app:showAsAction="withText" />
-            <item
-                android:title="dwqdqw"
-                app:showAsAction="withText" />
-            <item
-                android:title="dwqdqw"
-                app:showAsAction="withText" />
+            <group android:id="@+id/filters">
+                <item
+                    android:id="@+id/category_politics"
+                    android:title="@string/politics"
+                    app:showAsAction="withText" />
+                <item
+                    android:id="@+id/category_society"
+                    android:title="@string/society"
+                    app:showAsAction="withText" />
+                <item
+                    android:id="@+id/category_sport"
+                    android:title="@string/sport"
+                    app:showAsAction="withText" />
+                <item
+                    android:id="@+id/category_in_the_world"
+                    android:title="@string/in_the_world"
+                    app:showAsAction="withText" />
+                <item
+                    android:id="@+id/category_incidents"
+                    android:title="@string/incidents"
+                    app:showAsAction="withText" />
+            </group>
+
+            <group android:id="@+id/reset">
+                <item
+                    android:id="@+id/reset_filter"
+                    android:title="@string/reset_filter"
+                    android:icon="@drawable/ic_reset_filter"
+                    app:showAsAction="withText" />
+            </group>
+
+
         </menu>
 
     </item>

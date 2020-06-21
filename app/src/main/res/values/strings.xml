@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">Simple RSS Reading</string>
     <string name="filter_news">Filter news</string>
+    <string name="politics">Politics</string>
+    <string name="society">Society</string>
+    <string name="sport">Sport</string>
+    <string name="in_the_world">In the World</string>
+    <string name="incidents">Incidents</string>
+    <string name="reset_filter">Reset filter</string>
+    <string name="you_selected_categoty">You selected category %1$s</string>
+    <string name="you_reseted_filter">You reseted filter!</string>
 </resources>

@@ -17,7 +17,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class NewsFetcher {
     private static final String TAG = "NewsFetcher";
 
-    public List<NewsItem> getURLInputStream(String stringURL) {
+    public List<NewsItem> fetchNews(String stringURL) {
         List<NewsItem> newsItemList = new ArrayList<>();
         HttpsURLConnection connection = null;
         try {
