@@ -9,6 +9,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 
 public class NewsListActivity extends AppCompatActivity {
     private static final String TAG = "NewsListActivity";
@@ -27,20 +31,26 @@ public class NewsListActivity extends AppCompatActivity {
     private SwipeRefreshLayout mRefreshLayout;
     private List<NewsItem> mNewsList = new ArrayList<>();
     private String SELECTED_FILTER = "";
+    private Realm mRealm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_list);
 
+        Realm.init(this);
+        mRealm = Realm.getDefaultInstance();
+
         mNewsRecyclerView = findViewById(R.id.news_recycler_view);
         mNewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        RealmResults<NewsItem> realmResults = mRealm.where(NewsItem.class).findAll();
+        mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.copyFromRealm(realmResults)));
+
         mRefreshLayout = findViewById(R.id.news_container);
         mRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-        mRefreshLayout.setOnRefreshListener(() -> {
-            new FetchNewsTask().execute();
-        });
+        mRefreshLayout.setRefreshing(true);
+        mRefreshLayout.setOnRefreshListener(() -> new FetchNewsTask().execute());
 
         new FetchNewsTask().execute();
     }
@@ -179,7 +189,10 @@ public class NewsListActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<NewsItem> newsItems) {
+            RealmResults<NewsItem> realmResults = mRealm.where(NewsItem.class).findAll();
+            Log.i(TAG, "Ream size = " + realmResults.size());
             mNewsList = newsItems;
+            Log.i(TAG, "ArrayList size = " + mNewsList.size());
             if (SELECTED_FILTER.equals("")) {
                 mNewsRecyclerView.setAdapter(new NewsAdapter(mNewsList));
             } else {
@@ -187,5 +200,12 @@ public class NewsListActivity extends AppCompatActivity {
             }
             mRefreshLayout.setRefreshing(false);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        mRealm.close();
     }
 }

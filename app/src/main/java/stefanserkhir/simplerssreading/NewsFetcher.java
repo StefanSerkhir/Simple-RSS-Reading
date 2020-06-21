@@ -1,5 +1,6 @@
 package stefanserkhir.simplerssreading;
 
+import android.content.Context;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -13,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import io.realm.Realm;
 
 public class NewsFetcher {
     private static final String TAG = "NewsFetcher";
@@ -81,5 +84,11 @@ public class NewsFetcher {
             }
             parser.next();
         }
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.deleteAll();
+        realm.copyToRealm(newsList);
+        realm.commitTransaction();
+        realm.close();
     }
 }
