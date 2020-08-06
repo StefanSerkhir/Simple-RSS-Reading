@@ -1,4 +1,4 @@
-package stefanserkhir.simplerssreading;
+package stefanserkhir.simplerssreading.repository;
 
 import android.util.Xml;
 
@@ -15,6 +15,7 @@ import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 
 import io.realm.Realm;
+import stefanserkhir.simplerssreading.repository.db.model.NewsItem;
 
 public class NewsFetcher {
 

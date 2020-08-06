@@ -1,14 +1,18 @@
-package stefanserkhir.simplerssreading;
-
-import androidx.appcompat.app.AppCompatActivity;
+package stefanserkhir.simplerssreading.ui.views;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
+
+import stefanserkhir.simplerssreading.repository.db.model.NewsItem;
+import stefanserkhir.simplerssreading.R;
 
 public class NewsActivity extends AppCompatActivity {
     private static final String KEY_TITLE = "newsTitle";
@@ -45,12 +49,18 @@ public class NewsActivity extends AppCompatActivity {
 
         mNewsFullText = findViewById(R.id.news_full_text);
         mNewsFullText.setText(intent.getStringExtra(KEY_FULL_TEXT));
+        getSupportActionBar().setTitle(intent.getStringExtra(KEY_TITLE));
 
         mNewsImage = findViewById(R.id.news_image);
         Glide.with(this)
                 .load(intent.getStringExtra(KEY_IMAGE))
                 .thumbnail(Glide.with(this).load(R.drawable.loading_news))
-                .crossFade()
                 .into(mNewsImage);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.news_item, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

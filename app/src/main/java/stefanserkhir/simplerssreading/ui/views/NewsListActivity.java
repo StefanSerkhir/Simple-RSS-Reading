@@ -1,4 +1,9 @@
-package stefanserkhir.simplerssreading;
+package stefanserkhir.simplerssreading.ui.views;
+
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,17 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import io.realm.Realm;
-import io.realm.RealmResults;
+import stefanserkhir.simplerssreading.repository.db.model.NewsItem;
+import stefanserkhir.simplerssreading.R;
+import stefanserkhir.simplerssreading.repository.remote.FetchNewsTask;
+import stefanserkhir.simplerssreading.ui.views.adapter.NewsAdapter;
 
 
 public class NewsListActivity extends AppCompatActivity {
@@ -37,14 +36,15 @@ public class NewsListActivity extends AppCompatActivity {
 
         mNewsRecyclerView = findViewById(R.id.news_recycler_view);
         mNewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class).findAll()));
+        mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class).findAll(), this));
 
         mRefreshLayout = findViewById(R.id.news_container);
         mRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         mRefreshLayout.setRefreshing(true);
-        mRefreshLayout.setOnRefreshListener(() -> new FetchNewsTask().execute());
+        mRefreshLayout.setOnRefreshListener(() -> new FetchNewsTask(SELECTED_FILTER,
+                mNewsRecyclerView, mRealm, mRefreshLayout, this).execute());
 
-        new FetchNewsTask().execute();
+        new FetchNewsTask(SELECTED_FILTER, mNewsRecyclerView, mRealm, mRefreshLayout, this).execute();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class NewsListActivity extends AppCompatActivity {
                 break;
             case R.id.reset_filter:
                 mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
-                                .findAll()));
+                                .findAll(), this));
                 SELECTED_FILTER = "";
                 getSupportActionBar().setSubtitle(SELECTED_FILTER);
                 Toast.makeText(this, getString(R.string.you_reseted_filter),
@@ -92,79 +92,9 @@ public class NewsListActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.you_selected_categoty,
                     SELECTED_FILTER), Toast.LENGTH_SHORT).show();
             mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
-                                .contains("category", SELECTED_FILTER).findAll()));
+                                .contains("category", SELECTED_FILTER).findAll(), this));
         }
         return true;
-    }
-    private class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private TextView mNewsTitle;
-        private TextView mNewsDate;
-        private NewsItem mNewsItem;
-
-        public NewsHolder(@NonNull View itemView) {
-            super(itemView);
-
-            itemView.setOnClickListener(this);
-
-            mNewsTitle = itemView.findViewById(R.id.news_title);
-            mNewsDate = itemView.findViewById(R.id.news_date);
-        }
-
-        public void bindNews(NewsItem newsItem) {
-            mNewsTitle.setText(newsItem.getTitle());
-            mNewsDate.setText(newsItem.getDate());
-            mNewsItem = newsItem;
-        }
-
-        @Override
-        public void onClick(View v) {
-            startActivity(NewsActivity.newIntent(NewsListActivity.this, mNewsItem));
-        }
-    }
-
-    private class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
-        private RealmResults<NewsItem> mNewsList;
-
-        public NewsAdapter(RealmResults<NewsItem> newsList) {
-            mNewsList = newsList;
-        }
-
-        @NonNull
-        @Override
-        public NewsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new NewsHolder(getLayoutInflater().inflate(R.layout.news_item, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull NewsHolder newsHolder, int position) {
-            newsHolder.bindNews(mNewsList.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return mNewsList.size();
-        }
-    }
-
-    private class FetchNewsTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            new NewsFetcher().fetchNews("https://www.vesti.ru/vesti.rss");
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void voidParam) {
-            if (SELECTED_FILTER.equals("")) {
-                mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
-                                    .findAll()));
-            } else {
-                mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
-                                    .contains("category", SELECTED_FILTER).findAll()));
-            }
-            mRefreshLayout.setRefreshing(false);
-        }
     }
 
     @Override
