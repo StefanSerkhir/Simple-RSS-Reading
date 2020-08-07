@@ -22,4 +22,9 @@ public class NewsListImpl implements NewsListPresenter {
     public void onDataRequest() {
 
     }
+
+    @Override
+    public void onSelectingFilters(String filter) {
+
+    }
 }

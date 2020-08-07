@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.views.NewsActivity"
+        <activity android:name=".ui.views.SingleNewsActivity"
             android:parentActivityName=".ui.views.NewsListActivity">
         </activity>
         <activity android:name=".ui.views.NewsListActivity">

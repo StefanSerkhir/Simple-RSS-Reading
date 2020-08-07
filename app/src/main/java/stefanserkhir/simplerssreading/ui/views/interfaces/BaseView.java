@@ -6,5 +6,7 @@ public interface BaseView {
 
     void toggleOn();
 
+    void openNewScreen();
+
     void showError();
 }

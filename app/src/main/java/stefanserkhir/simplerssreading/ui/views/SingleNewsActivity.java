@@ -13,8 +13,9 @@ import com.bumptech.glide.Glide;
 
 import stefanserkhir.simplerssreading.repository.db.model.NewsItem;
 import stefanserkhir.simplerssreading.R;
+import stefanserkhir.simplerssreading.ui.views.interfaces.SingleNewsView;
 
-public class NewsActivity extends AppCompatActivity {
+public class SingleNewsActivity extends AppCompatActivity implements SingleNewsView {
     private static final String KEY_TITLE = "newsTitle";
     private static final String KEY_CATEGORY = "newsCategory";
     private static final String KEY_DATE = "newsDate";
@@ -27,7 +28,7 @@ public class NewsActivity extends AppCompatActivity {
     private ImageView mNewsImage;
 
     public static Intent newIntent(Context context, NewsItem newsItem) {
-        return new Intent(context, NewsActivity.class)
+        return new Intent(context, SingleNewsActivity.class)
                 .putExtra(KEY_TITLE, newsItem.getTitle())
                 .putExtra(KEY_CATEGORY, newsItem.getCategory())
                 .putExtra(KEY_DATE, newsItem.getDate())
@@ -62,5 +63,30 @@ public class NewsActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.news_item, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void goBack() {
+
+    }
+
+    @Override
+    public void updateUI() {
+
+    }
+
+    @Override
+    public void toggleOn() {
+
+    }
+
+    @Override
+    public void openNewScreen() {
+
+    }
+
+    @Override
+    public void showError() {
+
     }
 }

@@ -16,10 +16,12 @@ import io.realm.Realm;
 import stefanserkhir.simplerssreading.repository.db.model.NewsItem;
 import stefanserkhir.simplerssreading.R;
 import stefanserkhir.simplerssreading.repository.remote.FetchNewsTask;
+import stefanserkhir.simplerssreading.repository.remote.GetNewsFromRemote;
 import stefanserkhir.simplerssreading.ui.views.adapter.NewsAdapter;
+import stefanserkhir.simplerssreading.ui.views.interfaces.NewsListView;
 
 
-public class NewsListActivity extends AppCompatActivity {
+public class NewsListActivity extends AppCompatActivity implements NewsListView {
 
     private RecyclerView mNewsRecyclerView;
     private SwipeRefreshLayout mRefreshLayout;
@@ -36,7 +38,7 @@ public class NewsListActivity extends AppCompatActivity {
 
         mNewsRecyclerView = findViewById(R.id.news_recycler_view);
         mNewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class).findAll(), this));
+      //  mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class).findAll(), this));
 
         mRefreshLayout = findViewById(R.id.news_container);
         mRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
@@ -44,7 +46,10 @@ public class NewsListActivity extends AppCompatActivity {
         mRefreshLayout.setOnRefreshListener(() -> new FetchNewsTask(SELECTED_FILTER,
                 mNewsRecyclerView, mRealm, mRefreshLayout, this).execute());
 
-        new FetchNewsTask(SELECTED_FILTER, mNewsRecyclerView, mRealm, mRefreshLayout, this).execute();
+      //  new FetchNewsTask(SELECTED_FILTER, mNewsRecyclerView, mRealm, mRefreshLayout, this).execute();
+        mRefreshLayout.setRefreshing(false);
+
+        new GetNewsFromRemote().start();
     }
 
     @Override
@@ -102,5 +107,30 @@ public class NewsListActivity extends AppCompatActivity {
         super.onDestroy();
 
         mRealm.close();
+    }
+
+    @Override
+    public void applyFilter() {
+        // TODO Applying filters
+    }
+
+    @Override
+    public void updateUI() {
+        // TODO Loading News List
+    }
+
+    @Override
+    public void toggleOn() {
+        // TODO Switching on/off Loading bar
+    }
+
+    @Override
+    public void openNewScreen() {
+        // TODO Open Single News Activity
+    }
+
+    @Override
+    public void showError() {
+        // TODO Showing error if was problem
     }
 }

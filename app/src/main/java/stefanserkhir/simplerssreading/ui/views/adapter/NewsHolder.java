@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import stefanserkhir.simplerssreading.repository.db.model.NewsItem;
 import stefanserkhir.simplerssreading.R;
-import stefanserkhir.simplerssreading.ui.views.NewsActivity;
+import stefanserkhir.simplerssreading.ui.views.SingleNewsActivity;
 
 class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private Activity mActivity;
@@ -36,6 +36,6 @@ class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        mActivity.startActivity(NewsActivity.newIntent(mActivity, mNewsItem));
+        mActivity.startActivity(SingleNewsActivity.newIntent(mActivity, mNewsItem));
     }
 }
