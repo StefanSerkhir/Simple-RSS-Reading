@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import io.realm.RealmResults;
-import stefanserkhir.simplerssreading.repository.db.model.NewsItem;
+import stefanserkhir.simplerssreading.data.db.model.NewsItem;
 import stefanserkhir.simplerssreading.R;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {

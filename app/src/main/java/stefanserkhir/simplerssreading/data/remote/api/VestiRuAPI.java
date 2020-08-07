@@ -1,8 +1,8 @@
-package stefanserkhir.simplerssreading.repository.remote.api;
+package stefanserkhir.simplerssreading.data.remote.api;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import stefanserkhir.simplerssreading.repository.remote.model.RSSFeed;
+import stefanserkhir.simplerssreading.data.remote.model.RSSFeed;
 
 public interface VestiRuAPI {
 

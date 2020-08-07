@@ -7,7 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import stefanserkhir.simplerssreading.repository.db.model.NewsItem;
+import stefanserkhir.simplerssreading.data.db.model.NewsItem;
 import stefanserkhir.simplerssreading.R;
 import stefanserkhir.simplerssreading.ui.views.SingleNewsActivity;
 

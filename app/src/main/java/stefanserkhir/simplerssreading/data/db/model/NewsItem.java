@@ -1,4 +1,4 @@
-package stefanserkhir.simplerssreading.repository.db.model;
+package stefanserkhir.simplerssreading.data.db.model;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Required;

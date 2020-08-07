@@ -1,4 +1,4 @@
-package stefanserkhir.simplerssreading.repository.remote;
+package stefanserkhir.simplerssreading.data.remote;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import io.realm.Realm;
-import stefanserkhir.simplerssreading.repository.db.model.NewsItem;
-import stefanserkhir.simplerssreading.repository.NewsFetcher;
+import stefanserkhir.simplerssreading.data.db.model.NewsItem;
+import stefanserkhir.simplerssreading.data.NewsFetcher;
 import stefanserkhir.simplerssreading.ui.views.adapter.NewsAdapter;
 
 public class FetchNewsTask extends AsyncTask<Void, Void, Void> {

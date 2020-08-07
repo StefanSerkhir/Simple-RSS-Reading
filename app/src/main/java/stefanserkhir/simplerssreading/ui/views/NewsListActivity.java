@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import io.realm.Realm;
-import stefanserkhir.simplerssreading.repository.db.model.NewsItem;
+import stefanserkhir.simplerssreading.data.db.model.NewsItem;
 import stefanserkhir.simplerssreading.R;
-import stefanserkhir.simplerssreading.repository.remote.FetchNewsTask;
-import stefanserkhir.simplerssreading.repository.remote.GetNewsFromRemote;
+import stefanserkhir.simplerssreading.data.remote.FetchNewsTask;
+import stefanserkhir.simplerssreading.data.remote.GetNewsFromRemote;
 import stefanserkhir.simplerssreading.ui.views.adapter.NewsAdapter;
 import stefanserkhir.simplerssreading.ui.views.interfaces.NewsListView;
 

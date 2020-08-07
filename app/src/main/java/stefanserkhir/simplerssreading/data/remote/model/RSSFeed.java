@@ -1,4 +1,4 @@
-package stefanserkhir.simplerssreading.repository.remote.model;
+package stefanserkhir.simplerssreading.data.remote.model;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;

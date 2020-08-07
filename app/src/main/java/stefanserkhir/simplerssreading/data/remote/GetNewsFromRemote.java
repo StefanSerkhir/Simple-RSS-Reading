@@ -1,4 +1,4 @@
-package stefanserkhir.simplerssreading.repository.remote;
+package stefanserkhir.simplerssreading.data.remote;
 
 import android.util.Log;
 
@@ -7,8 +7,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
-import stefanserkhir.simplerssreading.repository.remote.api.VestiRuAPI;
-import stefanserkhir.simplerssreading.repository.remote.model.RSSFeed;
+import stefanserkhir.simplerssreading.data.remote.api.VestiRuAPI;
+import stefanserkhir.simplerssreading.data.remote.model.RSSFeed;
 
 public class GetNewsFromRemote implements Callback<RSSFeed> {
     static final String BASE_URL = "https://www.vesti.ru/";
@@ -39,7 +39,6 @@ public class GetNewsFromRemote implements Callback<RSSFeed> {
                         Log.d(T, "Category: " + article.getCategory());
                         Log.d(T, "FullText: " + article.getFullText());
                         Log.d(T, "URL: " + article.getEnclosure());
-                        //Log.d(T, "Enclosure / URL: " + article.getEnclosure().url);
                     }
             );
         }
