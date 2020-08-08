@@ -1,10 +1,10 @@
-package stefanserkhir.simplerssreading.data.db;
+package stefanserkhir.simplerssreading.data.local;
 
 import java.util.List;
 
 import io.realm.Realm;
-import stefanserkhir.simplerssreading.data.Repository;
-import stefanserkhir.simplerssreading.data.db.model.NewsItem;
+import stefanserkhir.simplerssreading.data.mapper.Repository;
+import stefanserkhir.simplerssreading.data.local.model.NewsItem;
 
 final class NewsDB implements Repository<NewsItem> {
 

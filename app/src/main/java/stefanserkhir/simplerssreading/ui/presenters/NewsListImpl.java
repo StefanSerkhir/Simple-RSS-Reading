@@ -7,14 +7,14 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import stefanserkhir.simplerssreading.data.local.model.NewsItem;
 import stefanserkhir.simplerssreading.data.remote.GetNewsRemote;
 import stefanserkhir.simplerssreading.data.remote.model.RSSFeed;
-import stefanserkhir.simplerssreading.data.remote.FetchNewsTask;
 import stefanserkhir.simplerssreading.domain.Domain;
 import stefanserkhir.simplerssreading.ui.presenters.interfaces.NewsListPresenter;
 import stefanserkhir.simplerssreading.ui.views.interfaces.NewsListView;
 
-public class NewsListImpl implements NewsListPresenter, FetchNewsTask.DoAfterFetch, Callback<RSSFeed> {
+public class NewsListImpl implements NewsListPresenter, Domain.DomainCallback {
     private NewsListView mView;
 
 
@@ -32,8 +32,7 @@ public class NewsListImpl implements NewsListPresenter, FetchNewsTask.DoAfterFet
 
     @Override
     public void onDataRequest() {
-        new GetNewsRemote().start(this);
-        new FetchNewsTask(this).execute();
+        new Domain(this).getNews();
     }
 
     @Override
@@ -42,22 +41,8 @@ public class NewsListImpl implements NewsListPresenter, FetchNewsTask.DoAfterFet
     }
 
     @Override
-    public void doThisAfterFetchTask(List<String> setOfCategories) {
+    public void onDomainResponse(List<NewsItem> newsList, List<String> categoriesList) {
         mView.updateUI("");
-        mView.createMenu(new Domain().getCategoriesList());
-    }
-
-    @Override
-    public void onResponse(Call<RSSFeed> call, Response<RSSFeed> response) {
-        if (response.isSuccessful()) {
-            RSSFeed rssFeed = response.body();
-            int i = 1;
-            Log.d("MyFilter", "Title: " + rssFeed.getChannelTitle());
-        }
-    }
-
-    @Override
-    public void onFailure(Call<RSSFeed> call, Throwable t) {
-        Log.d("MyFilter", "\n Failed ");
+        mView.createMenu(categoriesList);
     }
 }

@@ -1,15 +1,12 @@
 package stefanserkhir.simplerssreading.data.remote;
 
-import android.util.Log;
-
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
-import stefanserkhir.simplerssreading.data.Repository;
+import stefanserkhir.simplerssreading.data.mapper.Repository;
 import stefanserkhir.simplerssreading.data.remote.api.VestiRuAPI;
 import stefanserkhir.simplerssreading.data.remote.model.RSSFeed;
 

@@ -1,23 +1,28 @@
 package stefanserkhir.simplerssreading.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.Realm;
-import stefanserkhir.simplerssreading.data.db.model.NewsItem;
+import stefanserkhir.simplerssreading.data.local.model.NewsItem;
+import stefanserkhir.simplerssreading.data.mapper.NewsRepository;
 
-public class Domain {
+public class Domain implements NewsRepository.RepositoryCallback {
 
-    public List<String> getCategoriesList() {
-        List<String> categoriesList = new ArrayList<>();
-        Realm realm = Realm.getDefaultInstance();
-        realm.where(NewsItem.class).distinct("category").findAll().forEach(
-                category -> {
-                    if (!categoriesList.contains(category)) {
-                        categoriesList.add(category.getCategory());
-                    }
-                }
-        );
-        return categoriesList;
+    public interface DomainCallback {
+        void onDomainResponse(List<NewsItem> newsList, List<String> categoriesList);
+    }
+
+    DomainCallback mDomainCallback;
+
+    public Domain(DomainCallback domainCallback) {
+        mDomainCallback = domainCallback;
+    }
+
+    public void getNews() {
+        new NewsRepository(this).get();
+    }
+
+    @Override
+    public void onFetchNews(List<NewsItem> newsList) {
+        mDomainCallback.onDomainResponse(newsList, NewsRepository.getCategoriesList());
     }
 }

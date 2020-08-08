@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
-import stefanserkhir.simplerssreading.data.db.model.NewsItem;
+import stefanserkhir.simplerssreading.data.local.model.NewsItem;
 import stefanserkhir.simplerssreading.R;
 import stefanserkhir.simplerssreading.ui.views.interfaces.SingleNewsView;
 

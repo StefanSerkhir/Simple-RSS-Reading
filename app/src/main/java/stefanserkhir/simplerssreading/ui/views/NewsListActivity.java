@@ -15,7 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.List;
 
 import io.realm.Realm;
-import stefanserkhir.simplerssreading.data.db.model.NewsItem;
+import stefanserkhir.simplerssreading.data.local.model.NewsItem;
 import stefanserkhir.simplerssreading.R;
 import stefanserkhir.simplerssreading.ui.presenters.NewsListImpl;
 import stefanserkhir.simplerssreading.ui.presenters.interfaces.NewsListPresenter;
