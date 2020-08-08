@@ -16,7 +16,7 @@ public class SingleNews {
     private String link;
 
     @Element(name = "pubDate")
-    private String pubDate;
+    private String date;
 
     @Element(name = "category")
     private String category;
@@ -27,7 +27,7 @@ public class SingleNews {
 
     @Attribute(name = "url")
     @Path("enclosure")
-    private String enclosure;
+    private String image;
 
     public String getTitle() {
         return title;
@@ -45,12 +45,12 @@ public class SingleNews {
         this.link = link;
     }
 
-    public String getPubDate() {
-        return pubDate;
+    public String getDate() {
+        return date;
     }
 
-    public void setPubDate(String pubDate) {
-        this.pubDate = pubDate;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getCategory() {
@@ -69,11 +69,11 @@ public class SingleNews {
         this.fullText = fullText;
     }
 
-    public String getEnclosure() {
-        return enclosure;
+    public String getImage() {
+        return image;
     }
 
-    public void setEnclosure(String enclosure) {
-        this.enclosure = enclosure;
+    public void setImage(String image) {
+        this.image = image;
     }
 }

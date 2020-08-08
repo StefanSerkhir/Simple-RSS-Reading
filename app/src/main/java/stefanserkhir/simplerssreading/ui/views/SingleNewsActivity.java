@@ -71,7 +71,7 @@ public class SingleNewsActivity extends AppCompatActivity implements SingleNewsV
     }
 
     @Override
-    public void updateUI() {
+    public void updateUI(String how) {
 
     }
 

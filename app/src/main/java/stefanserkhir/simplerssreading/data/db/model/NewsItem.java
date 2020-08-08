@@ -4,14 +4,22 @@ import io.realm.RealmObject;
 import io.realm.annotations.Required;
 
 public class NewsItem extends RealmObject  {
+
     @Required
     private String title;
+
+    @Required
+    private String link;
+
     @Required
     private String fullText;
+
     @Required
     private String category;
+
     @Required
     private String date;
+
     private String image;
 
     public String getTitle() {
@@ -20,6 +28,14 @@ public class NewsItem extends RealmObject  {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getFullText() {

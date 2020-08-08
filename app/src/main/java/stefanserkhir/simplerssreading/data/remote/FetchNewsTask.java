@@ -1,47 +1,27 @@
 package stefanserkhir.simplerssreading.data.remote;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import java.util.List;
 
-import io.realm.Realm;
-import stefanserkhir.simplerssreading.data.db.model.NewsItem;
-import stefanserkhir.simplerssreading.data.NewsFetcher;
-import stefanserkhir.simplerssreading.ui.views.adapter.NewsAdapter;
+public class FetchNewsTask extends AsyncTask<Void, Void, List<String>> {
+    public interface DoAfterFetch {
+        void doThisAfterFetchTask(List<String> mSetOfCategories);
+    }
 
-public class FetchNewsTask extends AsyncTask<Void, Void, Void> {
-    private final String mSelectedFilter;
-    private final RecyclerView mNewsRecyclerView;
-    private final Realm mRealm;
-    private final SwipeRefreshLayout mRefreshLayout;
-    private final Activity mActivity;
+    DoAfterFetch mDoAfterFetch;
 
-    public FetchNewsTask(String filter, RecyclerView newsRecyclerView,
-                         Realm realm, SwipeRefreshLayout refreshLayout, Activity activity) {
-        mSelectedFilter = filter;
-        mNewsRecyclerView = newsRecyclerView;
-        mRealm = realm;
-        mRefreshLayout = refreshLayout;
-        mActivity = activity;
+    public FetchNewsTask(DoAfterFetch doAfterFetch) {
+        mDoAfterFetch = doAfterFetch;
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
-        new NewsFetcher().fetchNews("https://www.vesti.ru/vesti.rss");
-        return null;
+    protected List<String> doInBackground(Void... voids) {
+        return new NewsFetcher().fetchNews("https://www.vesti.ru/vesti.rss");
     }
 
     @Override
-    protected void onPostExecute(Void voidParam) {
-        if (mSelectedFilter.equals("")) {
-            mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
-                                .findAll(), mActivity));
-        } else {
-            mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
-                                .contains("category", mSelectedFilter).findAll(), mActivity));
-        }
-        mRefreshLayout.setRefreshing(false);
+    protected void onPostExecute(List<String> setOfCategories) {
+        mDoAfterFetch.doThisAfterFetchTask(setOfCategories);
     }
 }

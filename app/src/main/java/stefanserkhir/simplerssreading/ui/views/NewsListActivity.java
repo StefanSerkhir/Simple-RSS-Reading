@@ -1,9 +1,9 @@
 package stefanserkhir.simplerssreading.ui.views;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,11 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.util.List;
+
 import io.realm.Realm;
 import stefanserkhir.simplerssreading.data.db.model.NewsItem;
 import stefanserkhir.simplerssreading.R;
-import stefanserkhir.simplerssreading.data.remote.FetchNewsTask;
-import stefanserkhir.simplerssreading.data.remote.GetNewsFromRemote;
+import stefanserkhir.simplerssreading.ui.presenters.NewsListImpl;
+import stefanserkhir.simplerssreading.ui.presenters.interfaces.NewsListPresenter;
 import stefanserkhir.simplerssreading.ui.views.adapter.NewsAdapter;
 import stefanserkhir.simplerssreading.ui.views.interfaces.NewsListView;
 
@@ -25,8 +27,10 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
 
     private RecyclerView mNewsRecyclerView;
     private SwipeRefreshLayout mRefreshLayout;
-    private String SELECTED_FILTER = "";
     private Realm mRealm;
+    private NewsListPresenter mPresenter;
+    private List<String> mSetOfCategories;
+    private Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,67 +42,40 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
 
         mNewsRecyclerView = findViewById(R.id.news_recycler_view);
         mNewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-      //  mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class).findAll(), this));
 
         mRefreshLayout = findViewById(R.id.news_container);
         mRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-        mRefreshLayout.setRefreshing(true);
-        mRefreshLayout.setOnRefreshListener(() -> new FetchNewsTask(SELECTED_FILTER,
-                mNewsRecyclerView, mRealm, mRefreshLayout, this).execute());
+        mRefreshLayout.setOnRefreshListener(() -> mPresenter.onDataRequest());
 
-      //  new FetchNewsTask(SELECTED_FILTER, mNewsRecyclerView, mRealm, mRefreshLayout, this).execute();
-        mRefreshLayout.setRefreshing(false);
-
-        new GetNewsFromRemote().start();
+        mPresenter = new NewsListImpl().onAttachView(this);
+        mPresenter.onDataRequest();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activitiy_news_list, menu);
-
-        MenuCompat.setGroupDividerEnabled(menu, true);
-
+        mMenu = menu;
         return true;
     }
 
+    MenuItem selectedItem;
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (!item.getTitle().toString().equals(getString(R.string.filter_news))) {
+            Log.d("MyFilter", "Item title -> " + item.getTitle().toString());
 
-        final String CURRENT_CATEGORY = SELECTED_FILTER;
-        switch (item.getItemId()) {
-            case R.id.category_politics:
-                SELECTED_FILTER = getString(R.string.politics);
-                break;
-            case R.id.category_society:
-                SELECTED_FILTER = getString(R.string.society);
-                break;
-            case R.id.category_sport:
-                SELECTED_FILTER = getString(R.string.sport);
-                break;
-            case R.id.category_in_the_world:
-                SELECTED_FILTER = getString(R.string.in_the_world);
-                break;
-            case R.id.category_incidents:
-                SELECTED_FILTER = getString(R.string.incidents);
-                break;
-            case R.id.reset_filter:
-                mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
-                                .findAll(), this));
-                SELECTED_FILTER = "";
-                getSupportActionBar().setSubtitle(SELECTED_FILTER);
-                Toast.makeText(this, getString(R.string.you_reseted_filter),
-                                                            Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                return true;
+            if (selectedItem != null) {
+                selectedItem.setEnabled(true);
+            }
+
+            if (mSetOfCategories.contains(item.getTitle().toString())) {
+                mPresenter.onSelectingFilters(item.getTitle().toString());
+                item.setEnabled(false);
+                selectedItem = item;
+            } else {
+                mPresenter.onDataRequest();
+            }
         }
-        if (!SELECTED_FILTER.equals(CURRENT_CATEGORY)) {
-            getSupportActionBar().setSubtitle(SELECTED_FILTER);
-            Toast.makeText(this, getString(R.string.you_selected_categoty,
-                    SELECTED_FILTER), Toast.LENGTH_SHORT).show();
-            mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
-                                .contains("category", SELECTED_FILTER).findAll(), this));
-        }
+
         return true;
     }
 
@@ -110,13 +87,41 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
     }
 
     @Override
+    public void createMenu(List<String> list) {
+        if (mMenu.hasVisibleItems()) {
+            mMenu.removeItem(0);
+        }
+
+        mMenu.addSubMenu(R.string.filter_news).setIcon(R.drawable.ic_filter);
+        mMenu.getItem(0).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        for (int i = 0; i < list.size(); i++) {
+            mMenu.getItem(0).getSubMenu().add(0, i, i, list.get(i)); // add(groupId, itemId, order, title)
+        }
+        mMenu.getItem(0).getSubMenu().add(1, 0, list.size(), R.string.reset_filter);
+        mMenu.getItem(0).getSubMenu().getItem(list.size()).setIcon(R.drawable.ic_reset_filter);
+
+        MenuCompat.setGroupDividerEnabled(mMenu, true);
+
+        mSetOfCategories = list;
+    }
+
+    @Override
     public void applyFilter() {
         // TODO Applying filters
     }
 
     @Override
-    public void updateUI() {
+    public void updateUI(String how) {
         // TODO Loading News List
+
+        if (how.equals("")) {
+            mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
+                    .findAll(), this));
+        } else {
+            mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
+                    .contains("category", how).findAll(), this));
+        }
+        mRefreshLayout.setRefreshing(false);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package stefanserkhir.simplerssreading.data;
+package stefanserkhir.simplerssreading.data.remote;
 
 import android.util.Xml;
 
@@ -19,7 +19,8 @@ import stefanserkhir.simplerssreading.data.db.model.NewsItem;
 
 public class NewsFetcher {
 
-    public void fetchNews(String stringURL) {
+    public List<String> fetchNews(String stringURL) {
+        List<String> setOfCategories = new ArrayList<>();
         HttpsURLConnection connection = null;
         try {
             URL url = new URL(stringURL);
@@ -30,7 +31,7 @@ public class NewsFetcher {
                 throw new IOException(connection.getResponseMessage() + ": with " + stringURL);
             }
 
-            parseNews(in);
+            setOfCategories = parseNews(in);
         } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
         } finally {
@@ -38,11 +39,13 @@ public class NewsFetcher {
                 connection.disconnect();
             }
         }
+        return setOfCategories;
     }
 
-    private void parseNews(InputStream in) throws XmlPullParserException, IOException {
+    private List<String> parseNews(InputStream in) throws XmlPullParserException, IOException {
         XmlPullParser parser = Xml.newPullParser();
         parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+        List<String> setOfCategories = new ArrayList<>();
         parser.setInput(in, null);
         NewsItem newsToBeAdded = null;
         List<NewsItem> newsListToBeAdded = new ArrayList<>();
@@ -56,6 +59,9 @@ public class NewsFetcher {
                     if (newsToBeAdded != null) {
                         if (parser.getName().equals("title")) {
                             newsToBeAdded.setTitle(parser.nextText());
+                        }
+                        if (parser.getName().equals("link")) {
+                            newsToBeAdded.setLink(parser.nextText());
                         }
                         if (parser.getName().equals("pubDate")) {
                             newsToBeAdded.setDate(parser.nextText());
@@ -74,6 +80,10 @@ public class NewsFetcher {
                     break;
                 case XmlPullParser.END_TAG:
                     if (parser.getName().equals("item") && newsToBeAdded != null) {
+                        if (!setOfCategories.contains(newsToBeAdded.getCategory())
+                                && !newsToBeAdded.getCategory().equals("")) {
+                            setOfCategories.add(newsToBeAdded.getCategory());
+                        }
                         newsListToBeAdded.add(newsToBeAdded);
                     }
                     break;
@@ -88,5 +98,7 @@ public class NewsFetcher {
         realm.copyToRealm(newsListToBeAdded);
         realm.commitTransaction();
         realm.close();
+
+        return setOfCategories;
     }
 }

@@ -1,4 +1,6 @@
 package stefanserkhir.simplerssreading.ui.presenters.interfaces;
 
-public interface SingleNewsPresenter extends BasePresenter {
+import stefanserkhir.simplerssreading.ui.views.interfaces.SingleNewsView;
+
+public interface SingleNewsPresenter extends BasePresenter<SingleNewsView> {
 }

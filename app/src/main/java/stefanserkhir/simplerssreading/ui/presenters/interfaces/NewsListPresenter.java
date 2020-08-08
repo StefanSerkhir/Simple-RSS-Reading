@@ -1,6 +1,10 @@
 package stefanserkhir.simplerssreading.ui.presenters.interfaces;
 
-public interface NewsListPresenter extends BasePresenter {
+import android.view.Menu;
+
+import stefanserkhir.simplerssreading.ui.views.interfaces.NewsListView;
+
+public interface NewsListPresenter extends BasePresenter<NewsListView> {
 
     void onDataRequest();
 

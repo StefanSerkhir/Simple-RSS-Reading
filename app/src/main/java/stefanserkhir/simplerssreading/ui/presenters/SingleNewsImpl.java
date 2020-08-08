@@ -8,7 +8,7 @@ public class SingleNewsImpl implements SingleNewsPresenter {
     private SingleNewsView mView;
 
     @Override
-    public SingleNewsPresenter onAttachView(BaseView view) {
+    public SingleNewsPresenter onAttachView(SingleNewsView view) {
         mView = (SingleNewsView) view;
         return this;
     }

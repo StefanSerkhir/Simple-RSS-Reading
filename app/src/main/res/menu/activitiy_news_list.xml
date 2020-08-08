@@ -5,14 +5,16 @@
     <item
         android:icon="@drawable/ic_filter"
         android:title="@string/filter_news"
+        android:orderInCategory="10"
         app:showAsAction="ifRoom|withText" >
 
 
-        <menu>
+        <menu android:id="@+id/testId" >
             <group android:id="@+id/filters">
                 <item
                     android:id="@+id/category_politics"
                     android:title="@string/politics"
+                    android:titleCondensed=""
                     app:showAsAction="withText" />
                 <item
                     android:id="@+id/category_society"
