@@ -1,37 +1,37 @@
 package stefanserkhir.simplerssreading.ui.views.adapter;
 
-import android.app.Activity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import io.realm.RealmResults;
-import stefanserkhir.simplerssreading.data.local.model.NewsItem;
 import stefanserkhir.simplerssreading.R;
+import stefanserkhir.simplerssreading.ui.presenters.interfaces.NewsListPresenter;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
-    private RealmResults<NewsItem> mNewsList;
-    private final Activity mActivity;
+    private NewsListPresenter mNewsListPresenter;
+    private final LayoutInflater mInflater;
 
-    public NewsAdapter(RealmResults<NewsItem> newsList, Activity activity) {
-        mNewsList = newsList;
-        mActivity = activity;
+    public NewsAdapter(NewsListPresenter newsListPresenter, LayoutInflater inflater) {
+        mNewsListPresenter = newsListPresenter;
+        mInflater = inflater;
     }
 
     @NonNull
     @Override
     public NewsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new NewsHolder(mActivity.getLayoutInflater().inflate(R.layout.news_item, parent, false), mActivity);
+        return new NewsHolder(mInflater.inflate(R.layout.news_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull NewsHolder newsHolder, int position) {
-        newsHolder.bindNews(mNewsList.get(position));
+        mNewsListPresenter.onBindRepositoryItemViewAtPosition(newsHolder, position);
     }
 
     @Override
     public int getItemCount() {
-        return mNewsList.size();
+        return mNewsListPresenter.getRepositoryItemsCount();
     }
 }

@@ -3,6 +3,7 @@ package stefanserkhir.simplerssreading.data.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
 import stefanserkhir.simplerssreading.core.Mapper;
 import stefanserkhir.simplerssreading.data.local.model.NewsItem;
 import stefanserkhir.simplerssreading.data.remote.model.SingleNews;
@@ -24,6 +25,18 @@ public class MapperImpl implements Mapper<NewsItem, SingleNews> {
 
             convertedList.add(newsItem);
         }
+
+        addToRealm(convertedList);
+
         return convertedList;
+    }
+
+    private void addToRealm(List<NewsItem> convertedList) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.deleteAll();
+        realm.copyToRealm(convertedList);
+        realm.commitTransaction();
+        realm.close();
     }
 }

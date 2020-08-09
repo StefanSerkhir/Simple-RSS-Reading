@@ -1,27 +1,22 @@
 package stefanserkhir.simplerssreading.ui.presenters;
 
-import android.util.Log;
-
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import stefanserkhir.simplerssreading.data.local.model.NewsItem;
-import stefanserkhir.simplerssreading.data.remote.GetNewsRemote;
-import stefanserkhir.simplerssreading.data.remote.model.RSSFeed;
-import stefanserkhir.simplerssreading.domain.Domain;
+import stefanserkhir.simplerssreading.data.repository.RepositoryImpl;
+import stefanserkhir.simplerssreading.data.repository.interfaces.Repository;
 import stefanserkhir.simplerssreading.ui.presenters.interfaces.NewsListPresenter;
+import stefanserkhir.simplerssreading.ui.views.interfaces.RepositoryItemView;
 import stefanserkhir.simplerssreading.ui.views.interfaces.NewsListView;
 
-public class NewsListImpl implements NewsListPresenter, Domain.DomainCallback {
+public class NewsListImpl implements NewsListPresenter, RepositoryImpl.RepositoryCallback {
     private NewsListView mView;
-
+    private Repository mRepository;
 
     @Override
     public NewsListPresenter onAttachView(NewsListView view) {
         mView = view;
-        mView.updateUI("");
+        mRepository = new RepositoryImpl(this);
         return this;
     }
 
@@ -32,17 +27,30 @@ public class NewsListImpl implements NewsListPresenter, Domain.DomainCallback {
 
     @Override
     public void onDataRequest() {
-        new Domain(this).getNews();
+        mRepository.refreshNewsList();
+    }
+
+    @Override
+    public void onBindRepositoryItemViewAtPosition(RepositoryItemView itemView, int position) {
+        NewsItem newsItem = mRepository.getNewsItem(position);
+        itemView.setTitle(newsItem.getTitle());
+        itemView.setDate(newsItem.getDate());
+    }
+
+    @Override
+    public int getRepositoryItemsCount() {
+        return mRepository.getNewsCount();
     }
 
     @Override
     public void onSelectingFilters(String filter) {
-        mView.updateUI(filter);
+        mRepository.getNewsList(filter);
+        mView.updateUI();
     }
 
     @Override
-    public void onDomainResponse(List<NewsItem> newsList, List<String> categoriesList) {
-        mView.updateUI("");
+    public void onRepositoryResponse(List<NewsItem> list, List<String> categoriesList) {
+        mView.updateUI();
         mView.createMenu(categoriesList);
     }
 }

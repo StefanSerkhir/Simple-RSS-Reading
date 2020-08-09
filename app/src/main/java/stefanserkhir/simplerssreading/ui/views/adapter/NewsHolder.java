@@ -1,41 +1,39 @@
 package stefanserkhir.simplerssreading.ui.views.adapter;
 
-import android.app.Activity;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import stefanserkhir.simplerssreading.data.local.model.NewsItem;
 import stefanserkhir.simplerssreading.R;
-import stefanserkhir.simplerssreading.ui.views.SingleNewsActivity;
+import stefanserkhir.simplerssreading.ui.views.interfaces.RepositoryItemView;
 
-class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private Activity mActivity;
+class NewsHolder extends RecyclerView.ViewHolder implements RepositoryItemView, View.OnClickListener {
     private TextView mNewsTitle;
     private TextView mNewsDate;
-    private NewsItem mNewsItem;
 
-    public NewsHolder(@NonNull View itemView, Activity activity) {
+    public NewsHolder(@NonNull View itemView) {
         super(itemView);
 
         itemView.setOnClickListener(this);
 
         mNewsTitle = itemView.findViewById(R.id.news_title);
         mNewsDate = itemView.findViewById(R.id.news_date);
-
-        mActivity = activity;
-    }
-
-    public void bindNews(NewsItem newsItem) {
-        mNewsTitle.setText(newsItem.getTitle());
-        mNewsDate.setText(newsItem.getDate());
-        mNewsItem = newsItem;
     }
 
     @Override
     public void onClick(View v) {
-        mActivity.startActivity(SingleNewsActivity.newIntent(mActivity, mNewsItem));
+       // mActivity.startActivity(SingleNewsActivity.newIntent(mActivity, mNewsItem));
+    }
+
+    @Override
+    public void setTitle(String title) {
+        mNewsTitle.setText(title);
+    }
+
+    @Override
+    public void setDate(String date) {
+        mNewsDate.setText(date);
     }
 }

@@ -1,7 +1,6 @@
 package stefanserkhir.simplerssreading.ui.views;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -15,7 +14,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.List;
 
 import io.realm.Realm;
-import stefanserkhir.simplerssreading.data.local.model.NewsItem;
 import stefanserkhir.simplerssreading.R;
 import stefanserkhir.simplerssreading.ui.presenters.NewsListImpl;
 import stefanserkhir.simplerssreading.ui.presenters.interfaces.NewsListPresenter;
@@ -61,8 +59,6 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (!item.getTitle().toString().equals(getString(R.string.filter_news))) {
-            Log.d("MyFilter", "Item title -> " + item.getTitle().toString());
-
             if (selectedItem != null) {
                 selectedItem.setEnabled(true);
             }
@@ -75,7 +71,6 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
                 mPresenter.onDataRequest();
             }
         }
-
         return true;
     }
 
@@ -111,16 +106,8 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
     }
 
     @Override
-    public void updateUI(String how) {
-        // TODO Loading News List
-
-        if (how.equals("")) {
-            mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
-                    .findAll(), this));
-        } else {
-            mNewsRecyclerView.setAdapter(new NewsAdapter(mRealm.where(NewsItem.class)
-                    .contains("category", how).findAll(), this));
-        }
+    public void updateUI() {
+        mNewsRecyclerView.setAdapter(new NewsAdapter(mPresenter, getLayoutInflater()));
         mRefreshLayout.setRefreshing(false);
     }
 

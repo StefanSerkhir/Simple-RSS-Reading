@@ -18,8 +18,8 @@ public class SingleNews {
     @Element(name = "pubDate")
     private String date;
 
-    @Element(name = "category")
-    private String category;
+    //@Element(name = "category")
+    private String category = "ebal v rot";
 
     @Namespace(reference = "yandex")
     @Element(name = "full-text")
