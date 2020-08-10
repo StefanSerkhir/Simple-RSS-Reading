@@ -1,12 +1,12 @@
 package stefanserkhir.simplerssreading.ui.views;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.MenuCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -18,6 +18,7 @@ import stefanserkhir.simplerssreading.R;
 import stefanserkhir.simplerssreading.ui.presenters.NewsListImpl;
 import stefanserkhir.simplerssreading.ui.presenters.interfaces.NewsListPresenter;
 import stefanserkhir.simplerssreading.ui.views.adapter.NewsAdapter;
+import stefanserkhir.simplerssreading.ui.views.helpers.MenuHolder;
 import stefanserkhir.simplerssreading.ui.views.interfaces.NewsListView;
 
 
@@ -27,8 +28,6 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
     private SwipeRefreshLayout mRefreshLayout;
     private Realm mRealm;
     private NewsListPresenter mPresenter;
-    private List<String> mSetOfCategories;
-    private Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,32 +44,20 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
         mRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         mRefreshLayout.setOnRefreshListener(() -> mPresenter.onDataRequest());
 
-        mPresenter = new NewsListImpl().onAttachView(this);
-        mPresenter.onDataRequest();
+        mPresenter = new NewsListImpl();
+        mPresenter.onAttachView(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        mMenu = menu;
+        MenuHolder.init(menu);
+        mPresenter.onMenuRequest();
         return true;
     }
 
-    MenuItem selectedItem;
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (!item.getTitle().toString().equals(getString(R.string.filter_news))) {
-            if (selectedItem != null) {
-                selectedItem.setEnabled(true);
-            }
-
-            if (mSetOfCategories.contains(item.getTitle().toString())) {
-                mPresenter.onSelectingFilters(item.getTitle().toString());
-                item.setEnabled(false);
-                selectedItem = item;
-            } else {
-                mPresenter.onDataRequest();
-            }
-        }
+        MenuHolder.selectItem(item);
         return true;
     }
 
@@ -83,21 +70,7 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
 
     @Override
     public void createMenu(List<String> list) {
-        if (mMenu.hasVisibleItems()) {
-            mMenu.removeItem(0);
-        }
-
-        mMenu.addSubMenu(R.string.filter_news).setIcon(R.drawable.ic_filter);
-        mMenu.getItem(0).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        for (int i = 0; i < list.size(); i++) {
-            mMenu.getItem(0).getSubMenu().add(0, i, i, list.get(i)); // add(groupId, itemId, order, title)
-        }
-        mMenu.getItem(0).getSubMenu().add(1, 0, list.size(), R.string.reset_filter);
-        mMenu.getItem(0).getSubMenu().getItem(list.size()).setIcon(R.drawable.ic_reset_filter);
-
-        MenuCompat.setGroupDividerEnabled(mMenu, true);
-
-        mSetOfCategories = list;
+        MenuHolder.createMenu(list);
     }
 
     @Override
@@ -107,6 +80,7 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
 
     @Override
     public void updateUI() {
+        Log.d("MyFilter", "updateUI");
         mNewsRecyclerView.setAdapter(new NewsAdapter(mPresenter, getLayoutInflater()));
         mRefreshLayout.setRefreshing(false);
     }

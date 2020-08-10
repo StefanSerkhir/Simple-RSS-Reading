@@ -12,6 +12,8 @@ public interface Repository {
 
     List<NewsItem> getNewsList(String filter);
 
+    List<String> getCategoriesList();
+
     NewsItem getNewsItem(int position);
 
     int getNewsCount();

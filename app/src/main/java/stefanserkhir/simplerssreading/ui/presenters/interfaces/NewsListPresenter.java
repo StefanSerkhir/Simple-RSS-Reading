@@ -7,6 +7,8 @@ public interface NewsListPresenter extends BasePresenter<NewsListView> {
 
     void onDataRequest();
 
+    void onMenuRequest();
+
     void onBindRepositoryItemViewAtPosition(RepositoryItemView item, int position);
 
     int getRepositoryItemsCount();

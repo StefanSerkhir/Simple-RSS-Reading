@@ -1,5 +1,7 @@
 package stefanserkhir.simplerssreading.ui.presenters;
 
+import android.util.Log;
+
 import java.util.List;
 
 import stefanserkhir.simplerssreading.data.local.model.NewsItem;
@@ -14,10 +16,11 @@ public class NewsListImpl implements NewsListPresenter, RepositoryImpl.Repositor
     private Repository mRepository;
 
     @Override
-    public NewsListPresenter onAttachView(NewsListView view) {
+    public void onAttachView(NewsListView view) {
         mView = view;
         mRepository = new RepositoryImpl(this);
-        return this;
+        Log.d("MyFilter", "onAttachView");
+        mRepository.getNewsList();
     }
 
     @Override
@@ -28,6 +31,12 @@ public class NewsListImpl implements NewsListPresenter, RepositoryImpl.Repositor
     @Override
     public void onDataRequest() {
         mRepository.refreshNewsList();
+    }
+
+    @Override
+    public void onMenuRequest() {
+        Log.d("MyFilter", "onMenuRequest");
+        mView.createMenu(mRepository.getCategoriesList());
     }
 
     @Override
@@ -50,7 +59,9 @@ public class NewsListImpl implements NewsListPresenter, RepositoryImpl.Repositor
 
     @Override
     public void onRepositoryResponse(List<NewsItem> list, List<String> categoriesList) {
+        Log.d("MyFilter", "onRepositoryResponse -> size = " + list.size());
         mView.updateUI();
+        Log.d("MyFilter", "onRepositoryResponse");
         mView.createMenu(categoriesList);
     }
 }

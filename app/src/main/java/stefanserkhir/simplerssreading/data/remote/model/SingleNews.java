@@ -18,8 +18,8 @@ public class SingleNews {
     @Element(name = "pubDate")
     private String date;
 
-    //@Element(name = "category")
-    private String category = "ebal v rot";
+    @Element(name = "category")
+    private String category;
 
     @Namespace(reference = "yandex")
     @Element(name = "full-text")
@@ -33,47 +33,23 @@ public class SingleNews {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getLink() {
         return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
     }
 
     public String getDate() {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
     public String getCategory() {
         return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     public String getFullText() {
         return fullText;
     }
 
-    public void setFullText(String fullText) {
-        this.fullText = fullText;
-    }
-
     public String getImage() {
         return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 }

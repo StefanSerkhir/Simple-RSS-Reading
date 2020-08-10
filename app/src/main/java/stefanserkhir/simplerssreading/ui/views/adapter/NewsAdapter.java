@@ -32,6 +32,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
 
     @Override
     public int getItemCount() {
+        Log.d("MyFilter", "getItemCount -> mNewsListPresenter == null ? " + (mNewsListPresenter == null));
         return mNewsListPresenter.getRepositoryItemsCount();
     }
 }

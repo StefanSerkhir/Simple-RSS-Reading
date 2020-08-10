@@ -36,6 +36,7 @@ public class RepositoryImpl implements Callback<RSSFeed>, Repository {
 
     @Override
     public void getNewsList() {
+        Log.d("MyFilter", "getNewsList -> size = " + realm.where(NewsItem.class).findAll().size());
         mRepositoryCallback.onRepositoryResponse(
                 realm.where(NewsItem.class).findAll(), getCategoriesList());
     }
@@ -43,6 +44,19 @@ public class RepositoryImpl implements Callback<RSSFeed>, Repository {
     @Override
     public List<NewsItem> getNewsList(String filter) {
         return realm.where(NewsItem.class).contains("category", filter).findAll();
+    }
+
+    @Override
+    public List<String> getCategoriesList() {
+        List<String> categoriesList = new ArrayList<>();
+        realm.where(NewsItem.class).distinct("category").findAll().forEach(
+                category -> {
+                    if (!categoriesList.contains(category)) {
+                        categoriesList.add(category.getCategory());
+                    }
+                }
+        );
+        return categoriesList;
     }
 
     @Override
@@ -73,17 +87,5 @@ public class RepositoryImpl implements Callback<RSSFeed>, Repository {
     @Override
     public void onFailure(Call<RSSFeed> call, Throwable t) {
         Log.d("MyFilter", "\n Failed ");
-    }
-
-    private List<String> getCategoriesList() {
-        List<String> categoriesList = new ArrayList<>();
-        realm.where(NewsItem.class).distinct("category").findAll().forEach(
-                category -> {
-                    if (!categoriesList.contains(category)) {
-                        categoriesList.add(category.getCategory());
-                    }
-                }
-        );
-        return categoriesList;
     }
 }
