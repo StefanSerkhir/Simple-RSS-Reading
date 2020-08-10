@@ -86,7 +86,7 @@ public class SingleNewsActivity extends AppCompatActivity implements SingleNewsV
     }
 
     @Override
-    public void showError() {
+    public void showError(String message) {
 
     }
 }

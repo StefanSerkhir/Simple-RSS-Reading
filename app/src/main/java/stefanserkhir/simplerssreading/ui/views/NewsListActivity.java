@@ -98,7 +98,7 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
     }
 
     @Override
-    public void showError() {
-        // TODO Showing error if was problem
+    public void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

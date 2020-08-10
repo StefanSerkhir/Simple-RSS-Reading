@@ -8,5 +8,5 @@ public interface BaseView {
 
     void openNewScreen();
 
-    void showError();
+    void showError(String message);
 }

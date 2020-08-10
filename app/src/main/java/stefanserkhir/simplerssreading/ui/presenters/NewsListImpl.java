@@ -74,4 +74,21 @@ public class NewsListImpl implements NewsListPresenter, RepositoryImpl.Repositor
         mView.updateUI();
         mView.createMenu(categoriesList);
     }
+
+    @Override
+    public void onRepositoryFailure(int errorType) {
+        switch (errorType) {
+            case 0:
+                mView.showError("There are no news in the feed");
+                break;
+            case 1:
+                mView.showError("Response was unsuccessful");
+                break;
+            case 2:
+                mView.showError("Failed to fetch news");
+                break;
+            default:
+                mView.showError("Unspecified error");
+        }
+    }
 }

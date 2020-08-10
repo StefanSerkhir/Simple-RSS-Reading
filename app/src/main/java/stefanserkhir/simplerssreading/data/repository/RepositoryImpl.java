@@ -18,7 +18,10 @@ import stefanserkhir.simplerssreading.data.repository.interfaces.Repository;
 public class RepositoryImpl implements Callback<RSSFeed>, Repository {
 
     public interface RepositoryCallback {
+
         void onRepositoryResponse(List<NewsItem> newsList, List<String> categoriesList);
+
+        void onRepositoryFailure(int errorType);
     }
     private Realm realm;
 
@@ -83,13 +86,15 @@ public class RepositoryImpl implements Callback<RSSFeed>, Repository {
                 mRepositoryCallback.onRepositoryResponse(
                         new MapperImpl().map(rssFeed.getNewsList()), getCategoriesList());
             } else {
-                Log.d("MyFilter", "\n Failed in response method ");
+                mRepositoryCallback.onRepositoryFailure(0);
             }
+        } else {
+            mRepositoryCallback.onRepositoryFailure(1);
         }
     }
 
     @Override
     public void onFailure(Call<RSSFeed> call, Throwable t) {
-        Log.d("MyFilter", "\n Failed ");
+        mRepositoryCallback.onRepositoryFailure(2);
     }
 }
