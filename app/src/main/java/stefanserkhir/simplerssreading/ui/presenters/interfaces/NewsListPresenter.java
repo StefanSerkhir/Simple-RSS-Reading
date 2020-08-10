@@ -13,5 +13,7 @@ public interface NewsListPresenter extends BasePresenter<NewsListView> {
 
     int getRepositoryItemsCount();
 
-    void onSelectingFilters(String filter);
+    void onSelectingFilter(String filter);
+
+    void onResettingFilter();
 }

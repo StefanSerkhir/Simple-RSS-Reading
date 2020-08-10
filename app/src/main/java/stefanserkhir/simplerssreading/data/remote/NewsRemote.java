@@ -4,12 +4,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
-import stefanserkhir.simplerssreading.data.remote.api.VestiRuAPI;
+import stefanserkhir.simplerssreading.data.remote.api.VestiRuApi;
 import stefanserkhir.simplerssreading.data.remote.model.RSSFeed;
 
 public class NewsRemote {
 
-    private VestiRuAPI vestiRuAPI;
+    private VestiRuApi vestiRuAPI;
 
     public NewsRemote() {
         //noinspection deprecation
@@ -18,7 +18,7 @@ public class NewsRemote {
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
 
-        vestiRuAPI = retrofit.create(VestiRuAPI.class);
+        vestiRuAPI = retrofit.create(VestiRuApi.class);
     }
 
     public void start(Callback<RSSFeed> callback) {

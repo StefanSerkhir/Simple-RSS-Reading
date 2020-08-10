@@ -1,9 +1,9 @@
 package stefanserkhir.simplerssreading.ui.views;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,12 +21,9 @@ import stefanserkhir.simplerssreading.ui.views.adapter.NewsAdapter;
 import stefanserkhir.simplerssreading.ui.views.helpers.MenuHolder;
 import stefanserkhir.simplerssreading.ui.views.interfaces.NewsListView;
 
-
 public class NewsListActivity extends AppCompatActivity implements NewsListView {
-
     private RecyclerView mNewsRecyclerView;
     private SwipeRefreshLayout mRefreshLayout;
-    private Realm mRealm;
     private NewsListPresenter mPresenter;
 
     @Override
@@ -35,7 +32,6 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
         setContentView(R.layout.activity_news_list);
 
         Realm.init(this);
-        mRealm = Realm.getDefaultInstance();
 
         mNewsRecyclerView = findViewById(R.id.news_recycler_view);
         mNewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -46,6 +42,8 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
 
         mPresenter = new NewsListImpl();
         mPresenter.onAttachView(this);
+        mPresenter.onDataRequest();
+        mRefreshLayout.setRefreshing(true);
     }
 
     @Override
@@ -57,7 +55,17 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        MenuHolder.selectItem(item);
+        String selectedItem = MenuHolder.selectItem(item);
+        if (selectedItem != null) {
+            if ("".equals(selectedItem)) {
+                Toast.makeText(this, R.string.you_reseted_filter, Toast.LENGTH_LONG).show();
+                mPresenter.onResettingFilter();
+            } else {
+                Toast.makeText(this, getString(R.string.you_selected_categoty,
+                        selectedItem), Toast.LENGTH_LONG).show();
+                mPresenter.onSelectingFilter(selectedItem);
+            }
+        }
         return true;
     }
 
@@ -65,7 +73,7 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
     protected void onDestroy() {
         super.onDestroy();
 
-        mRealm.close();
+        Realm.getDefaultInstance().close();
     }
 
     @Override
@@ -74,13 +82,7 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
     }
 
     @Override
-    public void applyFilter() {
-        // TODO Applying filters
-    }
-
-    @Override
     public void updateUI() {
-        Log.d("MyFilter", "updateUI");
         mNewsRecyclerView.setAdapter(new NewsAdapter(mPresenter, getLayoutInflater()));
         mRefreshLayout.setRefreshing(false);
     }

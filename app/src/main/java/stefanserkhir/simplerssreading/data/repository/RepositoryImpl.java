@@ -35,15 +35,9 @@ public class RepositoryImpl implements Callback<RSSFeed>, Repository {
     }
 
     @Override
-    public void getNewsList() {
-        Log.d("MyFilter", "getNewsList -> size = " + realm.where(NewsItem.class).findAll().size());
+    public void getLocalNewsList() {
         mRepositoryCallback.onRepositoryResponse(
                 realm.where(NewsItem.class).findAll(), getCategoriesList());
-    }
-
-    @Override
-    public List<NewsItem> getNewsList(String filter) {
-        return realm.where(NewsItem.class).contains("category", filter).findAll();
     }
 
     @Override
@@ -65,21 +59,31 @@ public class RepositoryImpl implements Callback<RSSFeed>, Repository {
     }
 
     @Override
+    public NewsItem getNewsItem(int position, String filter) {
+        return realm.where(NewsItem.class)
+                .contains("category", filter).findAll().get(position);
+    }
+
+    @Override
     public int getNewsCount() {
         return realm.where(NewsItem.class).findAll().size();
     }
 
     @Override
+    public int getNewsCount(String filter) {
+        return realm.where(NewsItem.class)
+                .contains("category", filter).findAll().size();
+    }
+
+    @Override
     public void onResponse(Call<RSSFeed> call, Response<RSSFeed> response) {
-        Log.d("MyFilter", "\n rssFeed.getNewsList() ");
         if (response.isSuccessful()) {
             RSSFeed rssFeed = response.body();
             if ((rssFeed != null ? rssFeed.getNewsList() : null) != null) {
-                Log.d("MyFilter", "\n rssFeed.getNewsList() ");
                 mRepositoryCallback.onRepositoryResponse(
                         new MapperImpl().map(rssFeed.getNewsList()), getCategoriesList());
             } else {
-               onFailure(call, new Throwable("Failed in response method"));
+                Log.d("MyFilter", "\n Failed in response method ");
             }
         }
     }

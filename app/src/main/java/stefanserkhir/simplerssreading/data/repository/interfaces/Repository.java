@@ -8,13 +8,15 @@ public interface Repository {
 
     void refreshNewsList();
 
-    void getNewsList();
-
-    List<NewsItem> getNewsList(String filter);
+    void getLocalNewsList();
 
     List<String> getCategoriesList();
 
     NewsItem getNewsItem(int position);
 
+    NewsItem getNewsItem(int position, String filter);
+
     int getNewsCount();
+
+    int getNewsCount(String filter);
 }

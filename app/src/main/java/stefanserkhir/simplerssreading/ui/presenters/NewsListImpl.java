@@ -1,7 +1,5 @@
 package stefanserkhir.simplerssreading.ui.presenters;
 
-import android.util.Log;
-
 import java.util.List;
 
 import stefanserkhir.simplerssreading.data.local.model.NewsItem;
@@ -14,13 +12,13 @@ import stefanserkhir.simplerssreading.ui.views.interfaces.NewsListView;
 public class NewsListImpl implements NewsListPresenter, RepositoryImpl.RepositoryCallback {
     private NewsListView mView;
     private Repository mRepository;
+    private String mFilter;
 
     @Override
     public void onAttachView(NewsListView view) {
         mView = view;
         mRepository = new RepositoryImpl(this);
-        Log.d("MyFilter", "onAttachView");
-        mRepository.getNewsList();
+        mRepository.getLocalNewsList();
     }
 
     @Override
@@ -35,33 +33,45 @@ public class NewsListImpl implements NewsListPresenter, RepositoryImpl.Repositor
 
     @Override
     public void onMenuRequest() {
-        Log.d("MyFilter", "onMenuRequest");
         mView.createMenu(mRepository.getCategoriesList());
     }
 
     @Override
     public void onBindRepositoryItemViewAtPosition(RepositoryItemView itemView, int position) {
-        NewsItem newsItem = mRepository.getNewsItem(position);
+        NewsItem newsItem;
+        if (mFilter == null) {
+            newsItem = mRepository.getNewsItem(position);
+        } else {
+            newsItem = mRepository.getNewsItem(position, mFilter);
+        }
         itemView.setTitle(newsItem.getTitle());
         itemView.setDate(newsItem.getDate());
     }
 
     @Override
     public int getRepositoryItemsCount() {
-        return mRepository.getNewsCount();
+        if (mFilter == null) {
+            return mRepository.getNewsCount();
+        } else {
+            return mRepository.getNewsCount(mFilter);
+        }
     }
 
     @Override
-    public void onSelectingFilters(String filter) {
-        mRepository.getNewsList(filter);
+    public void onSelectingFilter(String filter) {
+        mFilter = filter;
+        mView.updateUI();
+    }
+
+    @Override
+    public void onResettingFilter() {
+        mFilter = null;
         mView.updateUI();
     }
 
     @Override
     public void onRepositoryResponse(List<NewsItem> list, List<String> categoriesList) {
-        Log.d("MyFilter", "onRepositoryResponse -> size = " + list.size());
         mView.updateUI();
-        Log.d("MyFilter", "onRepositoryResponse");
         mView.createMenu(categoriesList);
     }
 }
