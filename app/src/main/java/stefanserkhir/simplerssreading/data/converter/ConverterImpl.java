@@ -1,4 +1,4 @@
-package stefanserkhir.simplerssreading.data.mapper;
+package stefanserkhir.simplerssreading.data.converter;
 
 import java.util.ArrayList;
 import java.util.List;

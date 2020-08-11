@@ -7,9 +7,10 @@ import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
 import stefanserkhir.simplerssreading.core.ErrorType;
 import stefanserkhir.simplerssreading.data.local.model.NewsItem;
-import stefanserkhir.simplerssreading.data.mapper.ConverterImpl;
+import stefanserkhir.simplerssreading.data.converter.ConverterImpl;
 import stefanserkhir.simplerssreading.data.remote.NewsRemote;
 import stefanserkhir.simplerssreading.data.remote.model.RSSFeed;
 import stefanserkhir.simplerssreading.data.repository.interfaces.Repository;
@@ -76,6 +77,7 @@ public class RepositoryImpl implements Callback<RSSFeed>, Repository {
     }
 
     @Override
+    @EverythingIsNonNull
     public void onResponse(Call<RSSFeed> call, Response<RSSFeed> response) {
         if (response.isSuccessful()) {
             RSSFeed rssFeed = response.body();
@@ -91,6 +93,7 @@ public class RepositoryImpl implements Callback<RSSFeed>, Repository {
     }
 
     @Override
+    @EverythingIsNonNull
     public void onFailure(Call<RSSFeed> call, Throwable t) {
         mRepositoryCallback.onRepositoryFailure(ErrorType.FAILED_FETCH);
     }
