@@ -6,5 +6,5 @@ public interface NewsListView extends BaseView  {
 
     void createMenu(List<String> list);
 
-    void showError(String message);
+    void showError(int message);
 }

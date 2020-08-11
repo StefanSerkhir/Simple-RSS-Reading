@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import stefanserkhir.simplerssreading.R;
 import stefanserkhir.simplerssreading.core.ErrorType;
 import stefanserkhir.simplerssreading.core.KeyExtra;
 import stefanserkhir.simplerssreading.data.local.model.NewsItem;
@@ -91,16 +92,16 @@ public class NewsListPresenterImpl implements NewsListPresenter, RepositoryImpl.
     public void onRepositoryFailure(ErrorType errorType) {
         switch (errorType) {
             case EMPTY_NEWS_LIST:
-                mView.showError("There are no news in the feed");
+                mView.showError(R.string.error_empty_list);
                 break;
             case UNSUCCESSFUL_RESPONSE:
-                mView.showError("Response was unsuccessful");
+                mView.showError(R.string.error_unsuccessful);
                 break;
             case FAILED_FETCH:
-                mView.showError("Failed to fetch news");
+                mView.showError(R.string.error_failed);
                 break;
             default:
-                mView.showError("Unspecified error");
+                mView.showError(R.string.error_unknown);
         }
     }
 

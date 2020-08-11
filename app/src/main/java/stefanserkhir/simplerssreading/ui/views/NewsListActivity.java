@@ -60,10 +60,10 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
         String selectedItem = MenuHolder.selectItem(item);
         if (selectedItem != null) {
             if ("".equals(selectedItem)) {
-                Toast.makeText(this, R.string.you_reseted_filter, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.you_have_reset_filters, Toast.LENGTH_LONG).show();
                 mPresenter.onResettingFilter();
             } else {
-                Toast.makeText(this, getString(R.string.you_selected_categoty,
+                Toast.makeText(this, getString(R.string.you_selected_category,
                         selectedItem), Toast.LENGTH_LONG).show();
                 mPresenter.onSelectingFilter(selectedItem);
             }
@@ -98,7 +98,7 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
     }
 
     @Override
-    public void showError(String message) {
+    public void showError(int message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

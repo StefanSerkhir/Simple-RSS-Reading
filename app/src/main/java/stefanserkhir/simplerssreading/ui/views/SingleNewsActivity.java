@@ -27,25 +27,17 @@ public class SingleNewsActivity extends AppCompatActivity implements SingleNewsV
     private TextView mNewsDate;
     private TextView mNewsFullText;
     private ImageView mNewsImage;
-    private Intent mIntent;
     private SingleNewsPresenter mPresenter;
 
     public static Intent newIntent(Context context, Map<KeyExtra, String> kitExtra) {
-        return new Intent(context, SingleNewsActivity.class)
-                .putExtra(KeyExtra.TITLE.toString(), kitExtra.get(KeyExtra.TITLE))
-                .putExtra(KeyExtra.LINK.toString(), kitExtra.get(KeyExtra.LINK))
-                .putExtra(KeyExtra.DATE.toString(), kitExtra.get(KeyExtra.DATE))
-                .putExtra(KeyExtra.CATEGORY.toString(), kitExtra.get(KeyExtra.CATEGORY))
-                .putExtra(KeyExtra.FULL_TEXT.toString(), kitExtra.get(KeyExtra.FULL_TEXT))
-                .putExtra(KeyExtra.IMAGE.toString(), kitExtra.get(KeyExtra.IMAGE));
+        SingleNewsPresenterImpl.setKitExtra(kitExtra);
+        return new Intent(context, SingleNewsActivity.class);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
-
-        mIntent = getIntent();
 
         mNewsTitle = findViewById(R.id.news_title);
         mNewsDate = findViewById(R.id.news_date);
@@ -64,26 +56,25 @@ public class SingleNewsActivity extends AppCompatActivity implements SingleNewsV
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        startActivity(new Intent(
-                Intent.ACTION_VIEW, Uri.parse(mIntent.getStringExtra(KeyExtra.LINK.toString()))));
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mPresenter.getLink())));
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void updateUI() {
-        mNewsTitle.setText(mIntent.getStringExtra(KeyExtra.TITLE.toString()));
-        mNewsDate.setText(mIntent.getStringExtra(KeyExtra.DATE.toString()));
-        mNewsFullText.setText(mIntent.getStringExtra(KeyExtra.FULL_TEXT.toString()));
-        getSupportActionBar().setTitle(mIntent.getStringExtra(KeyExtra.TITLE.toString()));
+        mNewsTitle.setText(mPresenter.getTitle());
+        mNewsDate.setText(mPresenter.getDate());
+        mNewsFullText.setText(mPresenter.getFullText());
+        getSupportActionBar().setTitle(mPresenter.getTitle());
+        getSupportActionBar().setSubtitle(mPresenter.getCategory());
         Glide.with(this)
-                .load(mIntent.getStringExtra(KeyExtra.IMAGE.toString()))
+                .load(mPresenter.getImage())
                 .thumbnail(Glide.with(this).load(R.drawable.loading_news))
                 .into(mNewsImage);
     }
 
     @Override
     public void openNewScreen(Map<KeyExtra, String> kitExtra) {
-        startActivity(new Intent(
-                Intent.ACTION_VIEW, Uri.parse(mIntent.getStringExtra(KeyExtra.LINK.toString()))));
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mPresenter.getLink())));
     }
 }

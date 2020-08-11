@@ -1,13 +1,12 @@
 <resources>
     <string name="app_name">Simple RSS Reading</string>
     <string name="filter_news">Filter news</string>
-    <string name="politics">Политика</string>
-    <string name="society">общество</string>
-    <string name="sport">спорт</string>
-    <string name="in_the_world">экономика</string>
-    <string name="incidents">происшествия</string>
     <string name="reset_filter">Reset filter</string>
-    <string name="you_selected_categoty">You selected category %1$s</string>
-    <string name="you_reseted_filter">You reseted filter!</string>
+    <string name="you_selected_category">You selected category %1$s</string>
+    <string name="you_have_reset_filters">You have reset filters!</string>
     <string name="open_news_in_browser">Open news in browser</string>
+    <string name="error_empty_list">There are no news in the feed</string>
+    <string name="error_unsuccessful">Response was unsuccessful</string>
+    <string name="error_failed">Failed to fetch news</string>
+    <string name="error_unknown">Unknown error</string>
 </resources>
