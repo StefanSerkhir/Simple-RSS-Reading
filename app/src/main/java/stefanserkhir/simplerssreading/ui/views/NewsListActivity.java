@@ -3,6 +3,7 @@ package stefanserkhir.simplerssreading.ui.views;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,9 +22,11 @@ import stefanserkhir.simplerssreading.ui.presenters.NewsListPresenterImpl;
 import stefanserkhir.simplerssreading.ui.presenters.interfaces.NewsListPresenter;
 import stefanserkhir.simplerssreading.ui.views.adapter.NewsAdapter;
 import stefanserkhir.simplerssreading.ui.views.helpers.MenuHolder;
+import stefanserkhir.simplerssreading.ui.views.helpers.ScrollListener;
 import stefanserkhir.simplerssreading.ui.views.interfaces.NewsListView;
 
 public class NewsListActivity extends AppCompatActivity implements NewsListView {
+    private ProgressBar mScrollProgress;
     private RecyclerView mNewsRecyclerView;
     private SwipeRefreshLayout mRefreshLayout;
     private NewsListPresenter mPresenter;
@@ -34,6 +37,8 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
         setContentView(R.layout.activity_news_list);
 
         Realm.init(this);
+
+        mScrollProgress = findViewById(R.id.scroll_progress);
 
         mNewsRecyclerView = findViewById(R.id.news_recycler_view);
         mNewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -89,6 +94,8 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
     @Override
     public void updateUI() {
         mNewsRecyclerView.setAdapter(new NewsAdapter(mPresenter, getLayoutInflater()));
+        mNewsRecyclerView.addOnScrollListener(new ScrollListener(
+                mNewsRecyclerView.getLayoutManager(), mScrollProgress));
         mRefreshLayout.setRefreshing(false);
     }
 
