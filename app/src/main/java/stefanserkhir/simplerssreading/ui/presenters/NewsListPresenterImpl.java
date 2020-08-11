@@ -1,7 +1,13 @@
 package stefanserkhir.simplerssreading.ui.presenters;
 
-import java.util.List;
+import android.util.Log;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import stefanserkhir.simplerssreading.core.ErrorType;
+import stefanserkhir.simplerssreading.core.KeyExtra;
 import stefanserkhir.simplerssreading.data.local.model.NewsItem;
 import stefanserkhir.simplerssreading.data.repository.RepositoryImpl;
 import stefanserkhir.simplerssreading.data.repository.interfaces.Repository;
@@ -9,7 +15,7 @@ import stefanserkhir.simplerssreading.ui.presenters.interfaces.NewsListPresenter
 import stefanserkhir.simplerssreading.ui.views.interfaces.RepositoryItemView;
 import stefanserkhir.simplerssreading.ui.views.interfaces.NewsListView;
 
-public class NewsListImpl implements NewsListPresenter, RepositoryImpl.RepositoryCallback {
+public class NewsListPresenterImpl implements NewsListPresenter, RepositoryImpl.RepositoryCallback {
     private NewsListView mView;
     private Repository mRepository;
     private String mFilter;
@@ -38,14 +44,23 @@ public class NewsListImpl implements NewsListPresenter, RepositoryImpl.Repositor
 
     @Override
     public void onBindRepositoryItemViewAtPosition(RepositoryItemView itemView, int position) {
-        NewsItem newsItem;
-        if (mFilter == null) {
-            newsItem = mRepository.getNewsItem(position);
-        } else {
-            newsItem = mRepository.getNewsItem(position, mFilter);
-        }
+        NewsItem newsItem = fetchNewsItem(position);
         itemView.setTitle(newsItem.getTitle());
         itemView.setDate(newsItem.getDate());
+    }
+
+    @Override
+    public void onClick(int position) {
+        NewsItem newsItem = fetchNewsItem(position);
+        Log.d("MyFilter", "Title -> " + newsItem.getTitle());
+        Map<KeyExtra, String> kitExtra = new HashMap<>(6);
+        kitExtra.put(KeyExtra.TITLE, newsItem.getTitle());
+        kitExtra.put(KeyExtra.LINK, newsItem.getLink());
+        kitExtra.put(KeyExtra.DATE, newsItem.getDate());
+        kitExtra.put(KeyExtra.CATEGORY, newsItem.getCategory());
+        kitExtra.put(KeyExtra.FULL_TEXT, newsItem.getFullText());
+        kitExtra.put(KeyExtra.IMAGE, newsItem.getImage());
+        mView.openNewScreen(kitExtra);
     }
 
     @Override
@@ -76,19 +91,27 @@ public class NewsListImpl implements NewsListPresenter, RepositoryImpl.Repositor
     }
 
     @Override
-    public void onRepositoryFailure(int errorType) {
+    public void onRepositoryFailure(ErrorType errorType) {
         switch (errorType) {
-            case 0:
+            case EMPTY_NEWS_LIST:
                 mView.showError("There are no news in the feed");
                 break;
-            case 1:
+            case UNSUCCESSFUL_RESPONSE:
                 mView.showError("Response was unsuccessful");
                 break;
-            case 2:
+            case FAILED_FETCH:
                 mView.showError("Failed to fetch news");
                 break;
             default:
                 mView.showError("Unspecified error");
+        }
+    }
+
+    private NewsItem fetchNewsItem(int position) {
+        if (mFilter == null) {
+            return mRepository.getNewsItem(position);
+        } else {
+            return mRepository.getNewsItem(position, mFilter);
         }
     }
 }

@@ -4,7 +4,7 @@ import stefanserkhir.simplerssreading.ui.presenters.interfaces.SingleNewsPresent
 import stefanserkhir.simplerssreading.ui.views.interfaces.BaseView;
 import stefanserkhir.simplerssreading.ui.views.interfaces.SingleNewsView;
 
-public class SingleNewsImpl implements SingleNewsPresenter {
+public class SingleNewsPresenterImpl implements SingleNewsPresenter {
     private SingleNewsView mView;
 
     @Override

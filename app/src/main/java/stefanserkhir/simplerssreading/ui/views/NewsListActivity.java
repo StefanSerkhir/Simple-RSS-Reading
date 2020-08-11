@@ -12,10 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.List;
+import java.util.Map;
 
 import io.realm.Realm;
 import stefanserkhir.simplerssreading.R;
-import stefanserkhir.simplerssreading.ui.presenters.NewsListImpl;
+import stefanserkhir.simplerssreading.core.KeyExtra;
+import stefanserkhir.simplerssreading.ui.presenters.NewsListPresenterImpl;
 import stefanserkhir.simplerssreading.ui.presenters.interfaces.NewsListPresenter;
 import stefanserkhir.simplerssreading.ui.views.adapter.NewsAdapter;
 import stefanserkhir.simplerssreading.ui.views.helpers.MenuHolder;
@@ -40,7 +42,7 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
         mRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         mRefreshLayout.setOnRefreshListener(() -> mPresenter.onDataRequest());
 
-        mPresenter = new NewsListImpl();
+        mPresenter = new NewsListPresenterImpl();
         mPresenter.onAttachView(this);
         mPresenter.onDataRequest();
         mRefreshLayout.setRefreshing(true);
@@ -65,6 +67,7 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
                         selectedItem), Toast.LENGTH_LONG).show();
                 mPresenter.onSelectingFilter(selectedItem);
             }
+            getSupportActionBar().setSubtitle(selectedItem);
         }
         return true;
     }
@@ -74,6 +77,8 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
         super.onDestroy();
 
         Realm.getDefaultInstance().close();
+
+        mPresenter.onDetachView();
     }
 
     @Override
@@ -93,8 +98,8 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
     }
 
     @Override
-    public void openNewScreen() {
-        // TODO Open Single News Activity
+    public void openNewScreen(Map<KeyExtra, String> kitExtra) {
+        startActivity(SingleNewsActivity.newIntent(this, kitExtra));
     }
 
     @Override

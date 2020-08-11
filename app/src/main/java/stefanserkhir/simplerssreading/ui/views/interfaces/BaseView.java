@@ -1,12 +1,16 @@
 package stefanserkhir.simplerssreading.ui.views.interfaces;
 
+import java.util.Map;
+
+import stefanserkhir.simplerssreading.core.KeyExtra;
+
 public interface BaseView {
 
     void updateUI();
 
     void toggleOn();
 
-    void openNewScreen();
+    void openNewScreen(Map<KeyExtra, String> kitExtra);
 
     void showError(String message);
 }

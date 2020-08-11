@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
-import stefanserkhir.simplerssreading.core.Mapper;
+import stefanserkhir.simplerssreading.core.Converter;
 import stefanserkhir.simplerssreading.data.local.model.NewsItem;
 import stefanserkhir.simplerssreading.data.remote.model.SingleNews;
 
-public class MapperImpl implements Mapper<NewsItem, SingleNews> {
+public class ConverterImpl implements Converter<NewsItem, SingleNews> {
 
     @Override
     public List<NewsItem> map(List<SingleNews> list) {

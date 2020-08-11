@@ -12,13 +12,13 @@ public class NewsItem extends RealmObject  {
     private String link;
 
     @Required
-    private String fullText;
+    private String date;
 
     @Required
     private String category;
 
     @Required
-    private String date;
+    private String fullText;
 
     private String image;
 

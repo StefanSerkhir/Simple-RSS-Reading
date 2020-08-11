@@ -1,6 +1,5 @@
 package stefanserkhir.simplerssreading.ui.views.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -9,13 +8,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import stefanserkhir.simplerssreading.R;
 import stefanserkhir.simplerssreading.ui.presenters.interfaces.NewsListPresenter;
+import stefanserkhir.simplerssreading.ui.views.helpers.ClickListener;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
-    private NewsListPresenter mNewsListPresenter;
+    private NewsListPresenter mPresenter;
     private final LayoutInflater mInflater;
 
-    public NewsAdapter(NewsListPresenter newsListPresenter, LayoutInflater inflater) {
-        mNewsListPresenter = newsListPresenter;
+    public NewsAdapter(NewsListPresenter presenter, LayoutInflater inflater) {
+        mPresenter = presenter;
         mInflater = inflater;
     }
 
@@ -27,12 +27,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull NewsHolder newsHolder, int position) {
-        mNewsListPresenter.onBindRepositoryItemViewAtPosition(newsHolder, position);
+        mPresenter.onBindRepositoryItemViewAtPosition(newsHolder, position);
+        newsHolder.itemView.setOnClickListener(new ClickListener(mPresenter, position));
     }
 
     @Override
     public int getItemCount() {
-        Log.d("MyFilter", "getItemCount -> mNewsListPresenter == null ? " + (mNewsListPresenter == null));
-        return mNewsListPresenter.getRepositoryItemsCount();
+        return mPresenter.getRepositoryItemsCount();
     }
 }

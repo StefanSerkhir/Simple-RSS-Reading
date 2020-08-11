@@ -1,7 +1,5 @@
 package stefanserkhir.simplerssreading.data.repository;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +7,9 @@ import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import stefanserkhir.simplerssreading.core.ErrorType;
 import stefanserkhir.simplerssreading.data.local.model.NewsItem;
-import stefanserkhir.simplerssreading.data.mapper.MapperImpl;
+import stefanserkhir.simplerssreading.data.mapper.ConverterImpl;
 import stefanserkhir.simplerssreading.data.remote.NewsRemote;
 import stefanserkhir.simplerssreading.data.remote.model.RSSFeed;
 import stefanserkhir.simplerssreading.data.repository.interfaces.Repository;
@@ -21,7 +20,7 @@ public class RepositoryImpl implements Callback<RSSFeed>, Repository {
 
         void onRepositoryResponse(List<NewsItem> newsList, List<String> categoriesList);
 
-        void onRepositoryFailure(int errorType);
+        void onRepositoryFailure(ErrorType errorType);
     }
     private Realm realm;
 
@@ -84,17 +83,17 @@ public class RepositoryImpl implements Callback<RSSFeed>, Repository {
             RSSFeed rssFeed = response.body();
             if ((rssFeed != null ? rssFeed.getNewsList() : null) != null) {
                 mRepositoryCallback.onRepositoryResponse(
-                        new MapperImpl().map(rssFeed.getNewsList()), getCategoriesList());
+                        new ConverterImpl().map(rssFeed.getNewsList()), getCategoriesList());
             } else {
-                mRepositoryCallback.onRepositoryFailure(0);
+                mRepositoryCallback.onRepositoryFailure(ErrorType.EMPTY_NEWS_LIST);
             }
         } else {
-            mRepositoryCallback.onRepositoryFailure(1);
+            mRepositoryCallback.onRepositoryFailure(ErrorType.UNSUCCESSFUL_RESPONSE);
         }
     }
 
     @Override
     public void onFailure(Call<RSSFeed> call, Throwable t) {
-        mRepositoryCallback.onRepositoryFailure(2);
+        mRepositoryCallback.onRepositoryFailure(ErrorType.FAILED_FETCH);
     }
 }

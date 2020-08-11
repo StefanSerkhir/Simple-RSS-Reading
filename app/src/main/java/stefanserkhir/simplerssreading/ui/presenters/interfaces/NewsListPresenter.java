@@ -11,6 +11,8 @@ public interface NewsListPresenter extends BasePresenter<NewsListView> {
 
     void onBindRepositoryItemViewAtPosition(RepositoryItemView item, int position);
 
+    void onClick(int position);
+
     int getRepositoryItemsCount();
 
     void onSelectingFilter(String filter);

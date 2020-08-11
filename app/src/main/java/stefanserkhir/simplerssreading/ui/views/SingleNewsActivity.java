@@ -11,29 +11,27 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
-import stefanserkhir.simplerssreading.data.local.model.NewsItem;
+import java.util.Map;
+
+import stefanserkhir.simplerssreading.core.KeyExtra;
 import stefanserkhir.simplerssreading.R;
 import stefanserkhir.simplerssreading.ui.views.interfaces.SingleNewsView;
 
 public class SingleNewsActivity extends AppCompatActivity implements SingleNewsView {
-    private static final String KEY_TITLE = "newsTitle";
-    private static final String KEY_CATEGORY = "newsCategory";
-    private static final String KEY_DATE = "newsDate";
-    private static final String KEY_IMAGE = "newsImage";
-    private static final String KEY_FULL_TEXT = "newsFullText";
 
     private TextView mNewsTitle;
     private TextView mNewsDate;
     private TextView mNewsFullText;
     private ImageView mNewsImage;
 
-    public static Intent newIntent(Context context, NewsItem newsItem) {
+    public static Intent newIntent(Context context, Map<KeyExtra, String> kitExtra) {
         return new Intent(context, SingleNewsActivity.class)
-                .putExtra(KEY_TITLE, newsItem.getTitle())
-                .putExtra(KEY_CATEGORY, newsItem.getCategory())
-                .putExtra(KEY_DATE, newsItem.getDate())
-                .putExtra(KEY_IMAGE, newsItem.getImage())
-                .putExtra(KEY_FULL_TEXT, newsItem.getFullText());
+                .putExtra(KeyExtra.TITLE.toString(), kitExtra.get(KeyExtra.TITLE))
+                .putExtra(KeyExtra.LINK.toString(), kitExtra.get(KeyExtra.LINK))
+                .putExtra(KeyExtra.DATE.toString(), kitExtra.get(KeyExtra.DATE))
+                .putExtra(KeyExtra.CATEGORY.toString(), kitExtra.get(KeyExtra.CATEGORY))
+                .putExtra(KeyExtra.FULL_TEXT.toString(), kitExtra.get(KeyExtra.FULL_TEXT))
+                .putExtra(KeyExtra.IMAGE.toString(), kitExtra.get(KeyExtra.IMAGE));
     }
 
     @Override
@@ -43,18 +41,18 @@ public class SingleNewsActivity extends AppCompatActivity implements SingleNewsV
 
         Intent intent = getIntent();
         mNewsTitle = findViewById(R.id.news_title);
-        mNewsTitle.setText(intent.getStringExtra(KEY_TITLE));
+        mNewsTitle.setText(intent.getStringExtra(KeyExtra.TITLE.toString()));
 
         mNewsDate = findViewById(R.id.news_date);
-        mNewsDate.setText(intent.getStringExtra(KEY_DATE));
+        mNewsDate.setText(intent.getStringExtra(KeyExtra.DATE.toString()));
 
         mNewsFullText = findViewById(R.id.news_full_text);
-        mNewsFullText.setText(intent.getStringExtra(KEY_FULL_TEXT));
-        getSupportActionBar().setTitle(intent.getStringExtra(KEY_TITLE));
+        mNewsFullText.setText(intent.getStringExtra(KeyExtra.FULL_TEXT.toString()));
+        getSupportActionBar().setTitle(intent.getStringExtra(KeyExtra.TITLE.toString()));
 
         mNewsImage = findViewById(R.id.news_image);
         Glide.with(this)
-                .load(intent.getStringExtra(KEY_IMAGE))
+                .load(intent.getStringExtra(KeyExtra.IMAGE.toString()))
                 .thumbnail(Glide.with(this).load(R.drawable.loading_news))
                 .into(mNewsImage);
     }
@@ -81,7 +79,7 @@ public class SingleNewsActivity extends AppCompatActivity implements SingleNewsV
     }
 
     @Override
-    public void openNewScreen() {
+    public void openNewScreen(Map<KeyExtra, String> kitExtra) {
 
     }
 

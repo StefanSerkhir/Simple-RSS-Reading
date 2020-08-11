@@ -9,22 +9,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import stefanserkhir.simplerssreading.R;
 import stefanserkhir.simplerssreading.ui.views.interfaces.RepositoryItemView;
 
-class NewsHolder extends RecyclerView.ViewHolder implements RepositoryItemView, View.OnClickListener {
+class NewsHolder extends RecyclerView.ViewHolder implements RepositoryItemView {
     private TextView mNewsTitle;
     private TextView mNewsDate;
 
     public NewsHolder(@NonNull View itemView) {
         super(itemView);
 
-        itemView.setOnClickListener(this);
-
         mNewsTitle = itemView.findViewById(R.id.news_title);
         mNewsDate = itemView.findViewById(R.id.news_date);
-    }
-
-    @Override
-    public void onClick(View v) {
-       // mActivity.startActivity(SingleNewsActivity.newIntent(mActivity, mNewsItem));
     }
 
     @Override
