@@ -1,7 +1,5 @@
 package stefanserkhir.simplerssreading.ui.presenters;
 
-import android.util.Log;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +50,6 @@ public class NewsListPresenterImpl implements NewsListPresenter, RepositoryImpl.
     @Override
     public void onClick(int position) {
         NewsItem newsItem = fetchNewsItem(position);
-        Log.d("MyFilter", "Title -> " + newsItem.getTitle());
         Map<KeyExtra, String> kitExtra = new HashMap<>(6);
         kitExtra.put(KeyExtra.TITLE, newsItem.getTitle());
         kitExtra.put(KeyExtra.LINK, newsItem.getLink());

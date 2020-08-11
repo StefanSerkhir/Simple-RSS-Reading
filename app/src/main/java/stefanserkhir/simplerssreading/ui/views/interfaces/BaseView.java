@@ -8,9 +8,5 @@ public interface BaseView {
 
     void updateUI();
 
-    void toggleOn();
-
     void openNewScreen(Map<KeyExtra, String> kitExtra);
-
-    void showError(String message);
 }

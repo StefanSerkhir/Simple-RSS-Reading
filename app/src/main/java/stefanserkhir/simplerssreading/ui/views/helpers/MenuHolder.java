@@ -8,13 +8,11 @@ import androidx.core.view.MenuCompat;
 import java.util.List;
 
 import stefanserkhir.simplerssreading.R;
+import stefanserkhir.simplerssreading.core.MenuGroups;
 
 public class MenuHolder {
     private static Menu sMenu;
     private static MenuItem sPreviousItem;
-    private static final int CATEGORY_GROUP = 10;
-    private static final int RESET_GROUP = 1;
-    private static final int ROOT_GROUP = 0;
 
     public static void init(Menu menu) {
         sMenu = menu;
@@ -26,32 +24,33 @@ public class MenuHolder {
                 sMenu.removeItem(0);
             }
 
-            sMenu.addSubMenu(ROOT_GROUP, 0, 0, R.string.filter_news)
+            sMenu.addSubMenu(MenuGroups.ROOT_GROUP.ordinal(), 0, 0, R.string.filter_news)
                     .setIcon(R.drawable.ic_filter);
-            sMenu.getItem(ROOT_GROUP).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            sMenu.getItem(MenuGroups.ROOT_GROUP.ordinal())
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+            sMenu.getItem(0).getSubMenu()
+                    .add(MenuGroups.RESET_GROUP.ordinal(), 0, 0, R.string.reset_filter)
+                    .setIcon(R.drawable.ic_reset_filter);
 
             for (int i = 0; i < list.size(); i++) { // List.forEach(T -> {}) required API lvl 24
                 sMenu.getItem(0).getSubMenu() // add(groupId, itemId, order, title)
-                        .add(CATEGORY_GROUP, i + 1, i + 1, list.get(i));
+                        .add(MenuGroups.CATEGORY_GROUP.ordinal(), i + 1, i + 1, list.get(i));
             }
-
-            sMenu.getItem(0).getSubMenu()
-                    .add(RESET_GROUP, list.size() + 1, list.size() + 1, R.string.reset_filter)
-                    .setIcon(R.drawable.ic_reset_filter);
 
             MenuCompat.setGroupDividerEnabled(sMenu, true);
         }
     }
 
     public static String selectItem(MenuItem item) {
-        if (item.getGroupId() == ROOT_GROUP) {
+        if (item.getGroupId() == MenuGroups.ROOT_GROUP.ordinal()) {
             return null;
         } else {
             if (sPreviousItem != null) {
                 sPreviousItem.setEnabled(true);
             }
 
-            if (item.getGroupId() == RESET_GROUP) {
+            if (item.getGroupId() == MenuGroups.RESET_GROUP.ordinal()) {
                 return "";
             }
 

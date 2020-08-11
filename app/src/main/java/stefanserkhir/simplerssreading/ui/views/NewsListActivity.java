@@ -93,11 +93,6 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
     }
 
     @Override
-    public void toggleOn() {
-        // TODO Switching on/off Loading bar
-    }
-
-    @Override
     public void openNewScreen(Map<KeyExtra, String> kitExtra) {
         startActivity(SingleNewsActivity.newIntent(this, kitExtra));
     }
