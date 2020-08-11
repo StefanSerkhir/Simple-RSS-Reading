@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="small_margin_or_padding">8dp</dimen>
+    <dimen name="middle_margin_or_padding">16dp</dimen>
+    <dimen name="big_margin_or_padding">32dp</dimen>
+
+    <dimen name="title_text">20sp</dimen>
+    <dimen name="full_text">16sp</dimen>
+</resources>

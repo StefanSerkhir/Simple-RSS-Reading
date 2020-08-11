@@ -9,8 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:layout_margin="8dp">
+        android:layout_margin="@dimen/middle_margin_or_padding">
 
         <ImageView
             android:id="@+id/news_image"
@@ -25,7 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             tools:text="17:06 Today"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/small_margin_or_padding"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/news_image"/>
 
@@ -33,19 +32,19 @@
             android:id="@+id/news_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="@dimen/title_text"
             tools:text="Some Interesting News"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/small_margin_or_padding"
             app:layout_constraintTop_toBottomOf="@id/news_date" />
 
         <TextView
             android:id="@+id/news_full_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            tools:text="Bla bla happened some shit\nBla bla happened some shit\nBla bla happened some shit"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="32dp"
+            android:textSize="@dimen/full_text"
+            tools:text="Bla bla happened some things\nBla bla happened some things\nBla bla happened some things"
+            android:layout_marginTop="@dimen/small_margin_or_padding"
+            android:layout_marginBottom="@dimen/big_margin_or_padding"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/news_title"
             app:layout_constraintStart_toStartOf="parent" />
