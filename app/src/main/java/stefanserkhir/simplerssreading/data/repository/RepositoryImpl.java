@@ -45,13 +45,11 @@ public class RepositoryImpl implements Callback<RSSFeed>, Repository {
     @Override
     public List<String> getCategoriesList() {
         List<String> categoriesList = new ArrayList<>();
-        realm.where(NewsItem.class).distinct("category").findAll().forEach(
-                category -> {
-                    if (!categoriesList.contains(category)) {
-                        categoriesList.add(category.getCategory());
-                    }
-                }
-        );
+        for (NewsItem category : realm.where(NewsItem.class).distinct("category").findAll()) {
+            if (!categoriesList.contains(category.getCategory())) {
+                categoriesList.add(category.getCategory());
+            }
+        }
         return categoriesList;
     }
 
