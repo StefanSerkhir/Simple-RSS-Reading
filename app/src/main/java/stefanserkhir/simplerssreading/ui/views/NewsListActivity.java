@@ -49,7 +49,9 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
 
         mPresenter = new NewsListPresenterImpl();
         mPresenter.onAttachView(this);
-        mPresenter.onDataRequest();
+        if (savedInstanceState == null) {
+            mPresenter.onDataRequest();
+        }
         mRefreshLayout.setRefreshing(true);
     }
 
@@ -94,9 +96,9 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
     @Override
     public void updateUI() {
         mNewsRecyclerView.setAdapter(new NewsAdapter(mPresenter, getLayoutInflater()));
+        mRefreshLayout.setRefreshing(false);
         mNewsRecyclerView.addOnScrollListener(new ScrollListener(
                 mNewsRecyclerView.getLayoutManager(), mScrollProgress));
-        mRefreshLayout.setRefreshing(false);
     }
 
     @Override
