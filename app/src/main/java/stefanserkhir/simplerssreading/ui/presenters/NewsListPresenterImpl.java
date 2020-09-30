@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import stefanserkhir.simplerssreading.R;
 import stefanserkhir.simplerssreading.core.ErrorType;
 import stefanserkhir.simplerssreading.core.KeyExtra;
 import stefanserkhir.simplerssreading.data.local.model.NewsItem;
@@ -90,19 +89,7 @@ public class NewsListPresenterImpl implements NewsListPresenter, RepositoryImpl.
 
     @Override
     public void onRepositoryFailure(ErrorType errorType) {
-        switch (errorType) {
-            case EMPTY_NEWS_LIST:
-                mView.showError(R.string.error_empty_list);
-                break;
-            case UNSUCCESSFUL_RESPONSE:
-                mView.showError(R.string.error_unsuccessful);
-                break;
-            case FAILED_FETCH:
-                mView.showError(R.string.error_failed);
-                break;
-            default:
-                mView.showError(R.string.error_unknown);
-        }
+        mView.showError(errorType.getResourceStringId());
     }
 
     private NewsItem fetchNewsItem(int position) {
