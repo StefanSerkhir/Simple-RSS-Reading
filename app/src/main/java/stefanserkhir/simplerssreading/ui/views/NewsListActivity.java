@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.List;
 import java.util.Map;
 
@@ -108,6 +111,8 @@ public class NewsListActivity extends AppCompatActivity implements NewsListView 
 
     @Override
     public void showError(int message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Snackbar.make(mRefreshLayout, message, BaseTransientBottomBar.LENGTH_INDEFINITE)
+                .setAction(R.string.retry, view -> mPresenter.onDataRequest())
+                .show();
     }
 }
