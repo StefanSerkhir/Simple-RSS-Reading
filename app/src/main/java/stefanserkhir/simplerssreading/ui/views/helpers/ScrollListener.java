@@ -13,13 +13,18 @@ public class ScrollListener extends RecyclerView.OnScrollListener {
     public ScrollListener(RecyclerView.LayoutManager linearLayoutManager, ProgressBar scrollProgress) {
         mLinearLayoutManager = (LinearLayoutManager) linearLayoutManager;
         mScrollProgress = scrollProgress;
-        mScrollProgress.setMax(mLinearLayoutManager.getItemCount());
     }
 
     @Override
     public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-
-        mScrollProgress.setProgress(mLinearLayoutManager.findLastVisibleItemPosition() + 1);
+        if (dy == 0) {
+            int progress = mLinearLayoutManager.getItemCount() -
+                    mLinearLayoutManager.findLastVisibleItemPosition() - 1;
+            progress = progress == 0 ? 1 : progress;
+            mScrollProgress.setMax(progress);
+        }
+        mScrollProgress.setProgress(mScrollProgress.getMax() == 1 ?
+                1 : mLinearLayoutManager.findFirstVisibleItemPosition());
     }
 }
