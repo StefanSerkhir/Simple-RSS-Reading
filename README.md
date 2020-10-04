@@ -5,7 +5,6 @@ Android 6 or higher required.
 **Usages:**
 > API from https://www.vesti.ru/ \
 > Java\
-> Clean Architecture approach\
 > MVP\
 > Refrofit for working with API and parsing XML\
 > Glide for load news images and its thumbnails\
